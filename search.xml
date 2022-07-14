@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>第六届蓝帽杯初赛CTF题目 Re WriteUp</title>
+      <link href="//post/bluecup.html"/>
+      <url>//post/bluecup.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="LOADER-exe"><a href="#LOADER-exe" class="headerlink" title="LOADER.exe"></a>LOADER.exe</h1><p>首先64位程序，没壳</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714142045.png"></p><p>通过VirtualProtect 更改unk_140003040地址处数据的属性，0x40为PAGE_EXECUTE_READWRITE，即可执行可读写，作为sub_7FF7D5941040的参数传入。查看该函数的汇编指令</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714142733.png"></p><p>我们发现把unk_140003040的地址覆盖到了ret的位置，所以该函数执行完后跳到unk_140003040的地址执行，然后就是不断调式找真正执行程序逻辑的函数</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714143121.png"></p><p>继续跟</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714143245.png"></p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714143343.png"></p><p>主要就一直下断点找函数就行了，这里就是程序的真正逻辑</p><p>通过动调可以发现一些函数的执行逻辑</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714143644.png"></p><p>我们输入测试flag进行调试，不过在多次调试后，我们发现flag是有长度限制的</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714143856.png"></p><p>长度为42,测试flag{123456123456123456123456123456123456}</p><p>我们点击v1查看存储flag的内存时，其实是指向0000018DF0A42050，并不是直接指向flag字符串的</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714144204.png"></p><p>所以这应该是一个结构体</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714152343.png"></p><p>这里是把flag{}里面的前18个字符串取出来</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714153002.png"></p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714153249.png"></p><p>sub_7FF7592D4380函数有三个参数v13，10，xmmword_7FF7592EF1B0，其中v13就是我们输入的123456123456123456，最后一个参数应该是用来接收输出的</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714153212.png"></p><p>可以发现这个函数作用是把我们的字符串转换成了10进制的数字形式123456123456123456</p><p>下面同样出现了相同的循环</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714153622.png"></p><p>我们猜测是对后面18位的flag进行操作，所以我们换一组测试数据，可以看到下面又多了两组str_to_int的操作，并且是常数，我们进去观察一下，一个是72,057,594,037,927,936，另外一个是1,152,921,504,606,846,976</p><p>测试输入flag{720575940379279361152921504606846976}</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714155129.png"></p><p>这里的sub_7FF7592D50C0是一个比较大小的函数，要求我们的flag要在72,057,594,037,927,936与1,152,921,504,606,846,976之间</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714155821.png"></p><p>将flag第一部分进行两次传参，结果返回到v31中，v31结果为0x1400000000000001</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714160142.png"></p><p>可以发现这个函数是一个乘法</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714160519.png"></p><p>同理下面对flag的后18位也是乘法操作</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714160755.png"></p><p>继续往后调试</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714162014.png"></p><p>这里是把flag后半部分在经过平方后又乘上了11</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714162625.png"></p><p>sub_7FF7592D5400里面最后执行这个函数</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714162814.png"></p><p>进去分析一下，得到结果为0x327557B48632115FC02A5000000001</p><p>现在我们理一下数据</p><p>flag前18位进行了平方操作，得到了0x640000000000001400000000000001</p><p>flag后18位进行了平方操作，再乘以11，得到了0x318AA84B79CDEE0B43FD5B00000000</p><p>现在经过函数sub_7FF7592D5400后得到0x327557B48632115FC02A5000000001</p><p>经过测试，发现这个函数的作用是一个减法</p><p>最后一个strcmp，比较的结果是9，所以这道题其实就是一个方程求解问题</p><p>x^2 - 11*y^2 = 9   (72057594037927936&lt;x&lt;1152921504606846976)</p><p>在x的范围内求出对应的整数y，都为64bit的大整数，需要用到一般Pell方程进行求解，也可以使用wolframalpha在线计算。</p><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714165012.png"></p><p>求出来的解118936021352508390 和35860559716724409，判断两段长度是否为18，不足在最前面补0。flag{118936021352508390035860559716724409}</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> CTF </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> CTF </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>第十五届全国大学生信息安全竞赛创新实践能力赛CISCN</title>
       <link href="//post/CISCN2022.html"/>
       <url>//post/CISCN2022.html</url>

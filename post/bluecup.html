@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>逆向工程核心原理——PE映像切换 | Whitebird&#39;s Home</title>
-  <meta name="keywords" content=" Reverse ">
-  <meta name="description" content="逆向工程核心原理——PE映像切换 | Whitebird&#39;s Home">
+  <title>第六届蓝帽杯初赛CTF题目 Re WriteUp | Whitebird&#39;s Home</title>
+  <meta name="keywords" content=" CTF ">
+  <meta name="description" content="第六届蓝帽杯初赛CTF题目 Re WriteUp | Whitebird&#39;s Home">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta property="og:type" content="website">
 <meta property="og:title" content="link">
@@ -367,9 +367,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-PE映像切换" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-bluecup" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">逆向工程核心原理——PE映像切换</h1>
+        <h1 class="article-title">第六届蓝帽杯初赛CTF题目 Re WriteUp</h1>
     
     <div class="article-meta">
         
@@ -379,7 +379,7 @@
             <i class="iconfont icon-category"></i>
             
             
-            <a  data-rel="Reverse">Reverse</a>
+            <a  data-rel="CTF">CTF</a>
             
         </span>
         
@@ -387,19 +387,19 @@
         <span class="tag">
             <i class="iconfont icon-tag"></i>
             
-            <a class="color3">Reverse</a>
+            <a class="color4">CTF</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2022-07-09 18:32:18'>2022-04-02 10:49</time>
+            发布时间 : <time class="date" title='最后更新: 2022-07-14 17:03:38'>2022-07-13 22:49</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:1.7k</span>
+        <span>字数:720</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -429,7 +429,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PE%E6%98%A0%E5%83%8F"><span class="toc-text">PE映像</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PE%E6%98%A0%E5%83%8F%E5%88%87%E6%8D%A2"><span class="toc-text">PE映像切换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E7%A8%8B%E5%BA%8F%EF%BC%9AFake-exe%E3%80%81Real-exe%E3%80%81DebugMe3-exe"><span class="toc-text">示例程序：Fake.exe、Real.exe、DebugMe3.exe</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Fake-exe"><span class="toc-text">Fake.exe</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-exe"><span class="toc-text">Real.exe</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DebugMe3-exe"><span class="toc-text">DebugMe3.exe</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B0%83%E8%AF%95"><span class="toc-text">调试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Open-%E8%BE%93%E5%85%A5%E8%BF%90%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="toc-text">Open-输入运行参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#main-%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90"><span class="toc-text">main()函数分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FUNC-1-401150"><span class="toc-text">FUNC_1_401150</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CreateProcess-%E2%80%9Cfake-exe%E2%80%9D-CREATE-SUSPENDED"><span class="toc-text">CreateProcess(“fake.exe”,CREATE_SUSPENDED)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FUNC-2-4011D0"><span class="toc-text">FUNC_2_4011D0</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96fake-exe%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%AE%9E%E9%99%85%E6%98%A0%E5%B0%84%E5%9C%B0%E5%9D%80"><span class="toc-text">获取fake.exe进程的实际映射地址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96real-exe%E6%96%87%E4%BB%B6%E7%9A%84ImageBase"><span class="toc-text">获取real.exe文件的ImageBase</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AF%94%E8%BE%83ImageBase-of-fake-exe%E5%92%8CImageBase-of-real-exe"><span class="toc-text">比较ImageBase of fake.exe和ImageBase of real.exe</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%A4%E5%80%BC%E7%9B%B8%E5%90%8C%E6%97%B6"><span class="toc-text">两值相同时</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%A4%E5%80%BC%E4%B8%8D%E5%90%8C%E6%97%B6"><span class="toc-text">两值不同时</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FUNC-3-401320"><span class="toc-text">FUNC_3_401320</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BAreal-exe%E7%9A%84PE%E6%98%A0%E5%83%8F%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98"><span class="toc-text">为real.exe的PE映像分配内存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%98%A0%E5%B0%84PE%E6%96%87%E4%BB%B6%E5%A4%B4"><span class="toc-text">映射PE文件头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%98%A0%E5%B0%84%E8%8A%82%E5%8C%BA"><span class="toc-text">映射节区</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9EP"><span class="toc-text">修改EP</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ResumeThread"><span class="toc-text">ResumeThread()</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LOADER-exe"><span class="toc-text">LOADER.exe</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -445,84 +445,61 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="PE映像"><a href="#PE映像" class="headerlink" title="PE映像"></a>PE映像</h1><p>PE映像就是PE文件在内存中的映射形态，这在之前PE文件学习中也讲过，32位下OS为进程开辟4GB虚拟空间，低2G为用户空间，高2G是内核空间。</p>
-<p>PE文件映射到内存空间中是一个拉伸的过程</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/image-7.png"></p>
-<h1 id="PE映像切换"><a href="#PE映像切换" class="headerlink" title="PE映像切换"></a>PE映像切换</h1><p>PE映像切换就是先以挂起的方式运行某个进程(A.exe),然后将完全不同的一个PE文件(B.exe)的PE映像映射到A.exe的进程内存空间中，并在A.exe的内存空间中运行。</p>
-<p>此时虽然运行的进程名称是A.exe,但实际映射在内存中的PE映射却是B.exe,所以最终的行为动作与A.exe原来的行为动作完全不同。</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/image-8.png"></p>
-<h1 id="示例程序：Fake-exe、Real-exe、DebugMe3-exe"><a href="#示例程序：Fake-exe、Real-exe、DebugMe3-exe" class="headerlink" title="示例程序：Fake.exe、Real.exe、DebugMe3.exe"></a>示例程序：Fake.exe、Real.exe、DebugMe3.exe</h1><h2 id="Fake-exe"><a href="#Fake-exe" class="headerlink" title="Fake.exe"></a>Fake.exe</h2><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_15-30-47.png"></p>
-<h2 id="Real-exe"><a href="#Real-exe" class="headerlink" title="Real.exe"></a>Real.exe</h2><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_15-30-56.png"></p>
-<h2 id="DebugMe3-exe"><a href="#DebugMe3-exe" class="headerlink" title="DebugMe3.exe"></a>DebugMe3.exe</h2><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_15-31-24.png"></p>
-<p>DebugMe3.exe是以fake.exe为外壳，real.exe为内核程序</p>
-<p>要注意在控制台窗口输入运行命令时，命令的第一个参数为充当外壳进程的可执行文件路径，第二个参数为充当内核进程的可执行文件路径</p>
-<h1 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h1><h2 id="Open-输入运行参数"><a href="#Open-输入运行参数" class="headerlink" title="Open-输入运行参数"></a>Open-输入运行参数</h2><p>以参数的方式打开DebugMe3.exe</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_15-52-17.png"></p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_15-53-50.png"></p>
-<p>这里就是EP代码</p>
-<h2 id="main-函数分析"><a href="#main-函数分析" class="headerlink" title="main()函数分析"></a>main()函数分析</h2><p>代码流程图</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_16-40-50.png"></p>
-<p>CreateProcess()和ResumeThread()的行为动作明确，所以我们主要分析main调用的三个子函数</p>
-<h3 id="FUNC-1-401150"><a href="#FUNC-1-401150" class="headerlink" title="FUNC_1_401150"></a>FUNC_1_401150</h3><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_16-43-30.png"></p>
-<p>该函数是将real.exe文件读取到内存，将内存地址记为MEM_FILE_REAL_EXE</p>
-<h3 id="CreateProcess-“fake-exe”-CREATE-SUSPENDED"><a href="#CreateProcess-“fake-exe”-CREATE-SUSPENDED" class="headerlink" title="CreateProcess(“fake.exe”,CREATE_SUSPENDED)"></a>CreateProcess(“fake.exe”,CREATE_SUSPENDED)</h3><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-08-26.png"></p>
-<p>调用CreateProcess创建fake.exe进程，此时的进程处于挂起状态，同时也是暂停状态，此时可以自由操作其对应的内存。</p>
-<h3 id="FUNC-2-4011D0"><a href="#FUNC-2-4011D0" class="headerlink" title="FUNC_2_4011D0"></a>FUNC_2_4011D0</h3><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-21-37.png"></p>
-<p>这个函数里面实现了PE映像切换技术，我们逐步分析</p>
-<h4 id="获取fake-exe进程的实际映射地址"><a href="#获取fake-exe进程的实际映射地址" class="headerlink" title="获取fake.exe进程的实际映射地址"></a>获取fake.exe进程的实际映射地址</h4><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-26-48.png"></p>
-<p>这是获取fake.exe的主线程上下文，然后我们可以通过它来获取进程的PEB,由PEB.ImageBase得到进程的实际映射地址</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-37-29.png"></p>
-<p>[EBP-2D0]是ConText结构体，[EBP-22C]是ConText偏移A4的成员，也就是Ebx</p>
-<p>因为当前的fake.exe是以挂起模式创建的，处于暂停状态，进程被创建出来时，PE装载器就会把PEB结构体的地址设置给Ebx寄存器，所以当我们获取到Ebx寄存器的值就必须先获取进程主线程的上下文</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-43-02.png"></p>
-<p>此时的ECX就是PEB首地址，偏移为8的地方就是ImageBase，所以先执行add ecx+8</p>
-<ul>
-<li>PS：对于Win XP的EXE文件来说，PE文件头中的ImageBase就是进程的实际映射地址</li>
-<li>PS：Win Vista（内核6以后），引入了ASLR技术，ImageBase与实际映射地址不在相同</li>
-</ul>
-<h4 id="获取real-exe文件的ImageBase"><a href="#获取real-exe文件的ImageBase" class="headerlink" title="获取real.exe文件的ImageBase"></a>获取real.exe文件的ImageBase</h4><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-47-47.png"></p>
-<p>EDI寄存器的值为MEM_FILE_REAL_EXE地址，该地址是在FUNC1中分配得到的内存起始地址，而real.exe被原封不动的保存在其中。也就是说EDI指向real.exe文件的PE头，所以EDI+3C就是IMAGE_DOS_HEADER结构体中的e_lfanew</p>
-<p>[EDI+EAX]=IMAGE_NT_HEADER的起始地址</p>
-<p>[EDI+EAX+34]指向IMAGE_OPTION_HEADER的ImageBase成员</p>
-<p>执行上面指令后，real.exe的ImageBase就被存入了ECX寄存器中</p>
-<h4 id="比较ImageBase-of-fake-exe和ImageBase-of-real-exe"><a href="#比较ImageBase-of-fake-exe和ImageBase-of-real-exe" class="headerlink" title="比较ImageBase of fake.exe和ImageBase of real.exe"></a>比较ImageBase of fake.exe和ImageBase of real.exe</h4><h5 id="两值相同时"><a href="#两值相同时" class="headerlink" title="两值相同时"></a>两值相同时</h5><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_18-12-35.png"></p>
-<p>如果相同就继续往下执行，如果不相同就跳到004012EA</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/image-25.png"></p>
-<p>当fake.exe的PE镜像已经映射到400000地址处，地址400000也是real.exe的PE映像要映射的地方，若强行映射到该地址处，就会发生冲突，必须先卸载(Unmapping)fake.exe的PE映像的映射。由于fake.exe进程处于挂起状态，所以卸载PE映像时进程中也不会发生错误。</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_19-43-42.png"></p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">NTSYSAPI NTSTATUS ZwUnmapViewOfSection(
-  [in]           HANDLE ProcessHandle,
-  [in, optional] PVOID  BaseAddress
-);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h5 id="两值不同时"><a href="#两值不同时" class="headerlink" title="两值不同时"></a>两值不同时</h5><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/image-26.png"></p>
-<p>这时候不一定要卸载fake.exe的PE映像，可以先在fake.exe进程的虚拟内存空间中为real.exe的PE映像分配所需要的空间，然后将real.exe映射进去就行了。接下来还得告诉PE装载器，fake.exe进程的PE映像是400000地址处的real.exe，而不是 1000000地址处的fake.exe,简单修改PEB的ImageBase成员就行了</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_19-54-21.png"></p>
-<p>通过调用WriteProcessMemory()API成功将fake.exe进程的PEB.ImageBase改为real.exe文件的ImageBase值，此时fake.exe进程的PE映就被卸载了。</p>
-<h3 id="FUNC-3-401320"><a href="#FUNC-3-401320" class="headerlink" title="FUNC_3_401320"></a>FUNC_3_401320</h3><p>现在需要把real.exe的文件映射到fake.exe进程中，main函数的4010D1地址调用了FUNC_3_401320，进入FUNC3分析</p>
-<h4 id="为real-exe的PE映像分配内存"><a href="#为real-exe的PE映像分配内存" class="headerlink" title="为real.exe的PE映像分配内存"></a>为real.exe的PE映像分配内存</h4><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-03-52.png"></p>
-<p>这个就是为real.exe的PE映像分配内存</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-05-21.png"></p>
-<p>第二个参数是想要分配的内存起始地址，其值为real.exe的ImageBase(0x4000000)；函数的第三个参数是要分配内存大小，其值为real.exe的SizeofImage(0xA000)；</p>
-<h4 id="映射PE文件头"><a href="#映射PE文件头" class="headerlink" title="映射PE文件头"></a>映射PE文件头</h4><p>为real.exe的PE映像分配好内存空间后，接下来就是要将real.exe映射到fake.exe进程中。</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-27-40.png"></p>
-<p>调用WriteProcessMemory()API将real.exePE文件头写入到刚刚分配的内存区域，0x262CF8是由FUNC1函数读入到debug3.exe内存中的</p>
-<p>BytesToWrite参数为real.exe的sizeofHeader(0x4000)</p>
-<h4 id="映射节区"><a href="#映射节区" class="headerlink" title="映射节区"></a>映射节区</h4><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-28-42.png"></p>
-<p>启动循环，根据节区的数量反复调用WriteProcessMemory，映射PE节区。该过程需要读取的信息是读取PE文件头的IMAGE_SECTION_HEADER。循环结束后，real.exe文件被完全映射到fake.exe进程的40000地址处，但是此时real.exe代码还无法正常运行，需要修改进程的EP.</p>
-<h4 id="修改EP"><a href="#修改EP" class="headerlink" title="修改EP"></a>修改EP</h4><p>现在fake.exe处于挂起状态，将其恢复运行后，进程的主线程会运行何处的代码呢？这时候我们需要查看主线程CONTEXT结构体中的Eip成员</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-34-15.png"></p>
-<p>CONTEXT中有两个成员需要注意，一个就是EAX与EIP，分别位于结构体偏移B0和B8处，EAX=0x00401041，这个值很可能位于fake.exe进程中，我们用PE工具查看一下</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-36-18.png"></p>
-<p>如图所示，EAX值是fake.exe进程的EP地址，接下来看CONTEXT.EIP，其值为0x77C67098,在调试器中查看一下该地址</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-39-34.png"></p>
-<p>可以发现这个地址是ntdll.RtlUserThreadStart()API开始的地址，我们已知EIP寄存器存储的是要执行的指令代码的地址，而EAX存放返回地址，查看CONTEXT的EAX和EIP后，我们可以整理一下上面的代码执行过程：处于挂起状态的fake.exe进程恢复运行，首先会调用ntdll.RtlUserThreadStart()，跳转到EP地址。前面已经将fake.exe的进程PE映像替换为了real.exe的PE映像，所以我们只需要将CONTEXT.EAX修改为real.exe的EP地址(0x401060)</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-43-59.png"></p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-45-52.png"></p>
-<p>0x4014A2-0x4014B3就是将real.exe的EP地址设置到CONTEXT.EAX中</p>
-<h3 id="ResumeThread"><a href="#ResumeThread" class="headerlink" title="ResumeThread()"></a>ResumeThread()</h3><p>最后调用ResumeThread()，恢复运行fake.exe进程。</p>
-<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-47-55.png"></p>
-<p>通过上面的调试练习，我们学会了PE映像切换技术的工作原理。</p>
+        <h1 id="LOADER-exe"><a href="#LOADER-exe" class="headerlink" title="LOADER.exe"></a>LOADER.exe</h1><p>首先64位程序，没壳</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714142045.png"></p>
+<p>通过VirtualProtect 更改unk_140003040地址处数据的属性，0x40为PAGE_EXECUTE_READWRITE，即可执行可读写，作为sub_7FF7D5941040的参数传入。查看该函数的汇编指令</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714142733.png"></p>
+<p>我们发现把unk_140003040的地址覆盖到了ret的位置，所以该函数执行完后跳到unk_140003040的地址执行，然后就是不断调式找真正执行程序逻辑的函数</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714143121.png"></p>
+<p>继续跟</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714143245.png"></p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714143343.png"></p>
+<p>主要就一直下断点找函数就行了，这里就是程序的真正逻辑</p>
+<p>通过动调可以发现一些函数的执行逻辑</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714143644.png"></p>
+<p>我们输入测试flag进行调试，不过在多次调试后，我们发现flag是有长度限制的</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714143856.png"></p>
+<p>长度为42,测试flag{123456123456123456123456123456123456}</p>
+<p>我们点击v1查看存储flag的内存时，其实是指向0000018DF0A42050，并不是直接指向flag字符串的</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714144204.png"></p>
+<p>所以这应该是一个结构体</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714152343.png"></p>
+<p>这里是把flag{}里面的前18个字符串取出来</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714153002.png"></p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714153249.png"></p>
+<p>sub_7FF7592D4380函数有三个参数v13，10，xmmword_7FF7592EF1B0，其中v13就是我们输入的123456123456123456，最后一个参数应该是用来接收输出的</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714153212.png"></p>
+<p>可以发现这个函数作用是把我们的字符串转换成了10进制的数字形式123456123456123456</p>
+<p>下面同样出现了相同的循环</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714153622.png"></p>
+<p>我们猜测是对后面18位的flag进行操作，所以我们换一组测试数据，可以看到下面又多了两组str_to_int的操作，并且是常数，我们进去观察一下，一个是72,057,594,037,927,936，另外一个是1,152,921,504,606,846,976</p>
+<p>测试输入flag{720575940379279361152921504606846976}</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714155129.png"></p>
+<p>这里的sub_7FF7592D50C0是一个比较大小的函数，要求我们的flag要在72,057,594,037,927,936与1,152,921,504,606,846,976之间</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714155821.png"></p>
+<p>将flag第一部分进行两次传参，结果返回到v31中，v31结果为0x1400000000000001</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714160142.png"></p>
+<p>可以发现这个函数是一个乘法</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714160519.png"></p>
+<p>同理下面对flag的后18位也是乘法操作</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714160755.png"></p>
+<p>继续往后调试</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714162014.png"></p>
+<p>这里是把flag后半部分在经过平方后又乘上了11</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714162625.png"></p>
+<p>sub_7FF7592D5400里面最后执行这个函数</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714162814.png"></p>
+<p>进去分析一下，得到结果为0x327557B48632115FC02A5000000001</p>
+<p>现在我们理一下数据</p>
+<p>flag前18位进行了平方操作，得到了0x640000000000001400000000000001</p>
+<p>flag后18位进行了平方操作，再乘以11，得到了0x318AA84B79CDEE0B43FD5B00000000</p>
+<p>现在经过函数sub_7FF7592D5400后得到0x327557B48632115FC02A5000000001</p>
+<p>经过测试，发现这个函数的作用是一个减法</p>
+<p>最后一个strcmp，比较的结果是9，所以这道题其实就是一个方程求解问题</p>
+<p>x^2 - 11*y^2 = 9   (72057594037927936&lt;x&lt;1152921504606846976)</p>
+<p>在x的范围内求出对应的整数y，都为64bit的大整数，需要用到一般Pell方程进行求解，也可以使用wolframalpha在线计算。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220714165012.png"></p>
+<p>求出来的解118936021352508390 和35860559716724409，判断两段长度是否为18，不足在最前面补0。flag{118936021352508390035860559716724409}</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 767778848@qq.com </span>
