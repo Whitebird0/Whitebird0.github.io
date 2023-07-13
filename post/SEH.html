@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>逆向工程核心原理——SEH原理分析 | Whitebird&#39;s Home</title>
+  <meta name="keywords" content=" Reverse ">
+  <meta name="description" content="逆向工程核心原理——SEH原理分析 | Whitebird&#39;s Home">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="about">
+<meta property="og:url" content="https://whitebird0.github.io/about/index.html">
+<meta property="og:site_name" content="Whitebird&#39;s Home">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-09T11:26:44.000Z">
+<meta property="article:modified_time" content="2022-07-09T11:26:44.827Z">
+<meta property="article:author" content="Whitebird">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>Whitebird</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="github"
+               href="https://github.com/Whitebird0"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="csdn"
+               href="https://blog.csdn.net/jxnu_666?type=blog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-csdn"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="email"
+               href="mailto:767778848@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=767778848&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="全部文章">全部文章
+            
+                <small>(26)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                <li>
+                    <div data-rel="CTF">
+                        
+                        CTF
+                        <small>(6)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Reverse">
+                        
+                        Reverse
+                        <small>(8)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Android开发">
+                        
+                        Android开发
+                        <small>(10)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Android逆向">
+                        
+                        Android逆向
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Windows内核">
+                        
+                        Windows内核
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  hasFriend  site_url"
+               
+               href="/about">关于</a>
+        
+        <a style="width: 50%"
+                
+                                           class="friends">友链</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="26">
+<input type="hidden" id="yelog_site_word_count" value="139.2k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="https://www.codetea.top/">Codetea</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Android</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>CTF</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Reverse</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Windows内核</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <div id="local-search-result">
+
+    </div>
+    
+    <nav id="title-list-nav">
+        
+        
+        <a  class="全部文章 Android逆向 "
+           href="/post/Frida%E7%9A%84Python%E5%BA%93%E4%BD%BF%E7%94%A8.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android逆向学习笔记——使用Python库调用Frida">Android逆向学习笔记——使用Python库调用Frida</span>
+            <span class="post-date" title="2023-06-01 09:00:15">2023/06/01</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/NDK%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记——NDK开发">Android开发学习笔记——NDK开发</span>
+            <span class="post-date" title="2023-03-31 09:00:14">2023/03/31</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code1.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(1)——初识安卓">Android开发学习笔记(1)——初识安卓</span>
+            <span class="post-date" title="2023-03-30 09:00:21">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code2.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(2)——探究活动">Android开发学习笔记(2)——探究活动</span>
+            <span class="post-date" title="2023-03-30 09:00:20">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code3.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(3)——UI开发">Android开发学习笔记(3)——UI开发</span>
+            <span class="post-date" title="2023-03-30 09:00:19">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code4.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(4)——探究碎片">Android开发学习笔记(4)——探究碎片</span>
+            <span class="post-date" title="2023-03-30 09:00:18">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code5.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(5)——详解广播机制">Android开发学习笔记(5)——详解广播机制</span>
+            <span class="post-date" title="2023-03-30 09:00:17">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code6.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(6)——数据存储全方案">Android开发学习笔记(6)——数据存储全方案</span>
+            <span class="post-date" title="2023-03-30 09:00:16">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code7.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(7)——跨程序共享数据">Android开发学习笔记(7)——跨程序共享数据</span>
+            <span class="post-date" title="2023-03-30 09:00:15">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code8.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(8)——运用手机多媒体">Android开发学习笔记(8)——运用手机多媒体</span>
+            <span class="post-date" title="2023-03-30 09:00:14">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code9.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(9)——网络技术">Android开发学习笔记(9)——网络技术</span>
+            <span class="post-date" title="2023-03-30 09:00:13">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022%E5%B9%B4%E6%B1%9F%E8%A5%BF%E7%9C%81%E2%80%9C%E8%B5%A3%E8%82%B2%E6%9D%AF%E2%80%9D%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9B.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022年江西省“赣育杯”网络安全大赛初赛 Re WriteUp">2022年江西省“赣育杯”网络安全大赛初赛 Re WriteUp</span>
+            <span class="post-date" title="2022-10-08 22:40:21">2022/10/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/qwb.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第六届强网杯全国网络安全挑战赛 Re WriteUp">第六届强网杯全国网络安全挑战赛 Re WriteUp</span>
+            <span class="post-date" title="2022-08-08 15:49:21">2022/08/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/bluecup.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第六届蓝帽杯初赛CTF题目 Re WriteUp">第六届蓝帽杯初赛CTF题目 Re WriteUp</span>
+            <span class="post-date" title="2022-07-13 22:49:21">2022/07/13</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/CISCN2022.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第十五届全国大学生信息安全竞赛创新实践能力赛CISCN">第十五届全国大学生信息安全竞赛创新实践能力赛CISCN</span>
+            <span class="post-date" title="2022-06-03 20:49:21">2022/06/03</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022DASCTF%20Apr%20X%20FATE%20%E9%98%B2%E7%96%AB%E6%8C%91%E6%88%98%E8%B5%9B.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022DASCTF Apr X FATE 防疫挑战赛">2022DASCTF Apr X FATE 防疫挑战赛</span>
+            <span class="post-date" title="2022-06-01 20:49:21">2022/06/01</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/PE%E6%98%A0%E5%83%8F%E5%88%87%E6%8D%A2.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——PE映像切换">逆向工程核心原理——PE映像切换</span>
+            <span class="post-date" title="2022-04-02 10:49:21">2022/04/02</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E6%9C%AF.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——反调试技术">逆向工程核心原理——反调试技术</span>
+            <span class="post-date" title="2022-03-28 10:30:21">2022/03/28</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022-3-26-2022DASCTF-X-SU-Re-WriteUp.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022DASCTF X SU Re WriteUp">2022DASCTF X SU Re WriteUp</span>
+            <span class="post-date" title="2022-03-26 20:49:21">2022/03/26</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/SEH.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——SEH原理分析">逆向工程核心原理——SEH原理分析</span>
+            <span class="post-date" title="2022-03-19 10:49:21">2022/03/19</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/TLS%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——TLS回调函数">逆向工程核心原理——TLS回调函数</span>
+            <span class="post-date" title="2022-03-15 22:49:21">2022/03/15</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E5%85%A8%E5%B1%80API%E9%92%A9%E5%8F%96-IE%E9%93%BE%E6%8E%A5%E6%8E%A7%E5%88%B6.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——全局API钩取">逆向工程核心原理——全局API钩取</span>
+            <span class="post-date" title="2022-03-11 16:49:21">2022/03/11</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E8%AE%A1%E7%AE%97%E5%99%A8%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87%E6%95%B0%E5%AD%97.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——IAT_HOOK">逆向工程核心原理——IAT_HOOK</span>
+            <span class="post-date" title="2022-03-08 22:49:21">2022/03/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E9%80%9A%E8%BF%87%E4%BF%AE%E6%94%B9PE%E5%8A%A0%E8%BD%BDDLL.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——通过修改PE加载DLL">逆向工程核心原理——通过修改PE加载DLL</span>
+            <span class="post-date" title="2022-02-28 22:49:21">2022/02/28</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/DLL%E6%B3%A8%E5%85%A5.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——DLL注入">逆向工程核心原理——DLL注入</span>
+            <span class="post-date" title="2022-02-26 00:49:21">2022/02/26</span>
+        </a>
+        
+        
+        <a  class="全部文章 Windows内核 "
+           href="/post/%E6%AE%B5%E4%B8%8E%E9%A1%B5%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5.html"
+           data-tag="Windows内核"
+           data-author="" >
+            <span class="post-title" title="Windows内核基础知识-段选择子与段描述符">Windows内核基础知识-段选择子与段描述符</span>
+            <span class="post-date" title="2021-10-03 12:40:21">2021/10/03</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-SEH" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">逆向工程核心原理——SEH原理分析</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="Reverse">Reverse</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color3">Reverse</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2022-07-09 19:04:50'>2022-03-19 10:49</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:3.1k</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+        <span class="top-comment" title="跳转至评论区">
+            <a href="#comments">
+                评论:<span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </a>
+        </span>
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SEH%E5%9F%BA%E6%9C%AC%E8%AF%B4%E6%98%8E"><span class="toc-text">SEH基本说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SEH%E7%BB%83%E4%B9%A01"><span class="toc-text">SEH练习1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E5%B8%B8%E8%BF%90%E8%A1%8C"><span class="toc-text">正常运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E8%BF%90%E8%A1%8C"><span class="toc-text">调试运行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-text">注意</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OS%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95"><span class="toc-text">OS异常处理方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E5%B8%B8%E8%BF%90%E8%A1%8C%E6%97%B6%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95"><span class="toc-text">正常运行时的异常处理方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E8%BF%90%E8%A1%8C%E6%97%B6%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95"><span class="toc-text">调试运行时的异常处理方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%87%E5%88%B0%E5%BC%82%E5%B8%B8%E6%97%B6%E7%BB%8F%E5%B8%B8%E9%87%87%E7%94%A8%E7%9A%84%E5%87%A0%E7%A7%8D%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="toc-text">遇到异常时经常采用的几种处理方法：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8"><span class="toc-text">异常</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SEH%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E"><span class="toc-text">SEH详细说明</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SEH%E9%93%BE"><span class="toc-text">SEH链</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#EXCEPTION-REGISTRATION-RECORD"><span class="toc-text">EXCEPTION_REGISTRATION_RECORD</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-text">异常处理函数的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%82%E6%95%B0EXCEPTION-RECORD"><span class="toc-text">第一个参数EXCEPTION_RECORD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E5%8F%82%E6%95%B0EXCEPTION-REGISTRATION-RECORD"><span class="toc-text">第二个参数EXCEPTION_REGISTRATION_RECORD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E4%B8%AA%E5%8F%82%E6%95%B0CONTEXT"><span class="toc-text">第三个参数CONTEXT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BCEXCEPTION-DISPOSITION"><span class="toc-text">返回值EXCEPTION_DISPOSITION</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TEB-NtTib-ExceptionList"><span class="toc-text">TEB.NtTib.ExceptionList</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SEH%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95"><span class="toc-text">SEH安装方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SEH%E7%BB%83%E4%B9%A02"><span class="toc-text">SEH练习2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BSEH%E9%93%BE"><span class="toc-text">查看SEH链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87OD%E6%9F%A5%E6%89%BESEH%E9%93%BE"><span class="toc-text">通过OD查找SEH链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E7%94%9F%E5%BC%82%E5%B8%B8"><span class="toc-text">发生异常</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%99%A8%E5%8F%82%E6%95%B0"><span class="toc-text">查看异常处理器参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-text">调试异常处理器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4SEH"><span class="toc-text">删除SEH</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEOD%E9%80%89%E9%A1%B9"><span class="toc-text">设置OD选项</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="SEH基本说明"><a href="#SEH基本说明" class="headerlink" title="SEH基本说明"></a>SEH基本说明</h1><p>SEH是Windows操作系统提供的异常处理机制，在程序源代码中使用try、except、finally关键词来具体实现。SEH与C++中的try、catch异常处理不同，SEH是一种从属于VC++开发工具和Windwos操作系统的异常处理机制。</p>
+<h1 id="SEH练习1"><a href="#SEH练习1" class="headerlink" title="SEH练习1"></a>SEH练习1</h1><p>先简单介绍练习示例程序seh.exe，该程序故意触发了内存非法访问异常，然后通过SEH机制来处理该异常。并且使用PEB信息向程序中添加简单的反调试代码，使程序在正常运行与调试运行时表现出不同的行为动作。</p>
+<h2 id="正常运行"><a href="#正常运行" class="headerlink" title="正常运行"></a>正常运行</h2><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_14-02-48.png"></p>
+<p>seh.exe程序非常简单，双击运行弹出“Hello:)”字符串，虽然程序表面上是正常运行的，但是内部已经发生了异常，由于使用了SEH机制处理，所以可以正常运行。</p>
+<h2 id="调试运行"><a href="#调试运行" class="headerlink" title="调试运行"></a>调试运行</h2><p>用OD打开seh.exe</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_14-08-02.png"></p>
+<p>然后F9运行，程序由于发生非法访问异常会暂停调试</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_14-08-54.png"></p>
+<p>401019地址的mov dword ptr ds:[eax],1指令触发异常，当前的eax值为0，所以该指令实际含义是向内存地址为0处写入值1。但试图向未分配的内存地址0写入某个值，就会发生内存非法访问异常。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>内存地址0虽然属于seh.exe进程的用户内存区域，但是由于是未分配的空间，所以无法随意访问。利用OD的内存映射(view-memory菜单)，可以看到进程中内存地址0被标为未分配区域</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_14-14-01.png"></p>
+<p>我们查看OD的主窗口，当我F8单步下去时，这时候说执行不了的，下面还给了一句话</p>
+<p><strong><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_14-19-14.png"></strong></p>
+<p>我们根据提示Shift+F9继续运行程序试试</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_14-24-11.png"></p>
+<p>这次程序检测到了调试器(内部有一段简单的调试器检测代码)，程序在两种情况下的异常处理方式是不同的</p>
+<h1 id="OS异常处理方法"><a href="#OS异常处理方法" class="headerlink" title="OS异常处理方法"></a>OS异常处理方法</h1><p>通过前面的实验，我们知道同一程序在正常运行和调试运行时表现出的行为动作是不同的，这是由Windows OS异常处理方法的不同造成的。</p>
+<h2 id="正常运行时的异常处理方法"><a href="#正常运行时的异常处理方法" class="headerlink" title="正常运行时的异常处理方法"></a>正常运行时的异常处理方法</h2><p>进程运行过程中若发生异常，OS会委托进程处理。若进程代码中存在具体的异常处理(如SEH异常处理器)代码，则能顺利处理相关异常，程序继续执行。如果进程内部没有具体实现SEH，那么相关异常就无法处理，OS就启动默认的异常处理机制，终止进程运行。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_14-35-02.png"></p>
+<h2 id="调试运行时的异常处理方法"><a href="#调试运行时的异常处理方法" class="headerlink" title="调试运行时的异常处理方法"></a>调试运行时的异常处理方法</h2><p>调试运行中发生异常时，处理方法与正常运行时不同。如果调试进程内部发生异常，OS会首先把异常抛给调试进程处理。调试器几乎拥有被调试者的所有权限，它不仅可以运行、终止被调试者，还拥有被调试进程的虚拟内存、寄存器的读写权限。所以调试过程中发生的所有异常错误都要先交给调试器管理。</p>
+<h3 id="遇到异常时经常采用的几种处理方法："><a href="#遇到异常时经常采用的几种处理方法：" class="headerlink" title="遇到异常时经常采用的几种处理方法："></a>遇到异常时经常采用的几种处理方法：</h3><ol>
+<li><p>直接修改异常：代码、寄存器、内存</p>
+<p>被调试者发生异常时，调试器会在发生异常的代码处暂停，此时可以通过调试器直接修改问题的代码、内存、寄存器等，排除异常1后，调试器继续运行程序</p>
+</li>
+<li><p>将异常抛给被调试者</p>
+<p>如果被调试者内部存在异常处理函数(SEH)能够处理异常，那么异常通知会发送给被调试者，由它自己处理，此时与程序正常运行时的异常处理方式一样。</p>
+</li>
+<li><p>OS默认的异常处理机制</p>
+<p>如果调试者与被调试者都无法处理当前的异常，则OS的默认异常处理会处理它，终止被调试进程，同时结束调试。</p>
+</li>
+</ol>
+<h1 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h1><pre class="line-numbers language-c" data-language="c"><code class="language-c">EXCEPTION_ACCESS_VIOLATION    	    <span class="token number">0xC0000005</span>     程序企图读写一个不可访问的地址时引发的异常。例如企图读取<span class="token number">0</span>地址处的内存。
+EXCEPTION_ARRAY_BOUNDS_EXCEEDED     <span class="token number">0xC000008C</span>     数组访问越界时引发的异常。
+EXCEPTION_BREAKPOINT                <span class="token number">0x80000003</span>     触发断点时引发的异常。
+EXCEPTION_DATATYPE_MISALIGNMENT     <span class="token number">0x80000002</span>     程序读取一个未经对齐的数据时引发的异常。
+EXCEPTION_FLT_DENORMAL_OPERAND      <span class="token number">0xC000008D</span>     如果浮点数的操作数是非正常的，则引发该异常。所谓非正常即它的值太小以至于不能用标准格式表示出来。
+EXCEPTION_FLT_DIVIDE_BY_ZERO        <span class="token number">0xC000008E</span>     浮点数除法的除数是<span class="token number">0</span>时引发该异常。
+EXCEPTION_FLT_INEXACT_RESULT        <span class="token number">0xC000008F</span>     浮点数操作的结果不能精确表示成小数时引发该异常。
+EXCEPTION_FLT_INVALID_OPERATION     <span class="token number">0xC0000090</span>     该异常表示不包括在这个表内的其它浮点数异常。
+EXCEPTION_FLT_OVERFLOW              <span class="token number">0xC0000091</span>     浮点数的指数超过所能表示的最大值时引发该异常。
+EXCEPTION_FLT_STACK_CHECK           <span class="token number">0xC0000092</span>     进行浮点数运算时栈发生溢出或下溢时引发该异常。
+EXCEPTION_FLT_UNDERFLOW             <span class="token number">0xC0000093</span>     浮点数的指数小于所能表示的最小值时引发该异常。
+EXCEPTION_ILLEGAL_INSTRUCTION       <span class="token number">0xC000001D</span>     程序企图执行一个无效的指令时引发该异常。
+EXCEPTION_IN_PAGE_ERROR             <span class="token number">0xC0000006</span>     程序要访问的内存页不在物理内存中时引发的异常。
+EXCEPTION_INT_DIVIDE_BY_ZERO        <span class="token number">0xC0000094</span>     整数除法的除数是<span class="token number">0</span>时引发该异常。
+EXCEPTION_INT_OVERFLOW              <span class="token number">0xC0000095</span>     整数操作的结果溢出时引发该异常。
+EXCEPTION_INVALID_DISPOSITION       <span class="token number">0xC0000026</span>     异常处理器返回一个无效的处理的时引发该异常。
+EXCEPTION_NONCONTINUABLE_EXCEPTION  <span class="token number">0xC0000025</span>     发生一个不可继续执行的异常时，如果程序继续执行，则会引发该异常。
+EXCEPTION_PRIV_INSTRUCTION          <span class="token number">0xC0000096</span>     程序企图执行一条当前CPU模式不允许的指令时引发该异常。
+EXCEPTION_SINGLE_STEP               <span class="token number">0x80000004</span>     标志寄存器的TF位为<span class="token number">1</span>时，每执行一条指令就会引发该异常。主要用于单步调试。
+EXCEPTION_STACK_OVERFLOW            <span class="token number">0xC00000FD</span>     栈溢出时引发该异常<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="SEH详细说明"><a href="#SEH详细说明" class="headerlink" title="SEH详细说明"></a>SEH详细说明</h1><h2 id="SEH链"><a href="#SEH链" class="headerlink" title="SEH链"></a>SEH链</h2><p>SEH是以链的方式存在。第一个异常处理器中若未处理相关异常，异常就会被传递到下个异常处理器中，直到得到处理。</p>
+<h3 id="EXCEPTION-REGISTRATION-RECORD"><a href="#EXCEPTION-REGISTRATION-RECORD" class="headerlink" title="EXCEPTION_REGISTRATION_RECORD"></a>EXCEPTION_REGISTRATION_RECORD</h3><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_EXCEPTION_REGISTRATION_RECORD</span>
+<span class="token punctuation">&#123;</span>
+     PEXCEPTION_REGISTRATION_RECORD Next<span class="token punctuation">;</span>
+     PEXCEPTION_DISPOSITION Handler<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span> EXCEPTION_REGISTRATION_RECORD<span class="token punctuation">,</span> <span class="token operator">*</span>PEXCEPTION_REGISTRATION_RECORD<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>Next是指向下一个EXCEPTION_REGISTRATION_RECORD结构体的指针，Handler成员是异常处理函数(异常处理器)。若Next成员的值为FFFFFFFF，则表示它是链表的最后一个结点。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/749281_ZVFWN44W33SUD5W.jpg"></p>
+<p>这张图里有3个SEH(异常处理器)，发生异常时，该异常会按照(A)—&gt;(B)—&gt;(C)的顺序依次传递，直到有异常处理器处理。</p>
+<h2 id="异常处理函数的定义"><a href="#异常处理函数的定义" class="headerlink" title="异常处理函数的定义"></a>异常处理函数的定义</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">//此函数并未在MSDN上公开</span>
+EXCEPTION_DISPOSITION __cdecl <span class="token function">_except_handler</span><span class="token punctuation">(</span>
+	EXCEPTION_RECODE <span class="token operator">*</span>pRecord<span class="token punctuation">,</span>
+    EXCEPTION_REGISTRATION_RECORD <span class="token operator">*</span>pFrame<span class="token punctuation">,</span>		<span class="token comment">//指向SHE链中当前_EXCEPTION_REGISTRATION结构的地址</span>
+    CONTEXT  <span class="token operator">*</span>pContext<span class="token punctuation">,</span>
+    PVOID pValue <span class="token comment">//用于内嵌异常的处理，读者可以暂时忽略它</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这个异常处理函数由系统调用，是一个回调函数，系统调用它时会给出四个参数，且这4个参数中保存着与异常相关的信息。</p>
+<h3 id="第一个参数EXCEPTION-RECORD"><a href="#第一个参数EXCEPTION-RECORD" class="headerlink" title="第一个参数EXCEPTION_RECORD"></a>第一个参数EXCEPTION_RECORD</h3><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_EXCEPTION_RECORD</span> <span class="token punctuation">&#123;</span>
+    DWORD ExceptionCode<span class="token punctuation">;</span>   <span class="token comment">//指出异常类型</span>
+    DWORD ExceptionFlags<span class="token punctuation">;</span>
+    <span class="token keyword">struct</span> <span class="token class-name">_EXCEPTION_RECORD</span> <span class="token operator">*</span>ExceptionRecord<span class="token punctuation">;</span>
+    PVOID ExceptionAddress<span class="token punctuation">;</span>   <span class="token comment">//发生异常的代码地址</span>
+    DWORD NumberParameters<span class="token punctuation">;</span>
+    ULONG_PTR ExceptionInformation<span class="token punctuation">[</span>EXCEPTION_MAXIMUM_PARAMETERS<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span> EXCEPTION_RECORD<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="第二个参数EXCEPTION-REGISTRATION-RECORD"><a href="#第二个参数EXCEPTION-REGISTRATION-RECORD" class="headerlink" title="第二个参数EXCEPTION_REGISTRATION_RECORD"></a>第二个参数EXCEPTION_REGISTRATION_RECORD</h3><p>指向异常帧结构的指针</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+ntdll<span class="token operator">!</span>_EXCEPTION_REGISTRATION_RECORD
+   <span class="token operator">+</span><span class="token number">0x000</span> Next             <span class="token operator">:</span> Ptr32 _EXCEPTION_REGISTRATION_RECORD
+   <span class="token operator">+</span><span class="token number">0x004</span> Handler          <span class="token operator">:</span> Ptr32 _EXCEPTION_DISPOSITION <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="第三个参数CONTEXT"><a href="#第三个参数CONTEXT" class="headerlink" title="第三个参数CONTEXT"></a>第三个参数CONTEXT</h3><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_CONTEXT</span> <span class="token punctuation">&#123;</span>
+    DWORD ContextFlags<span class="token punctuation">;</span>
+    DWORD   Dr0<span class="token punctuation">;</span>
+    DWORD   Dr1<span class="token punctuation">;</span>
+    DWORD   Dr2<span class="token punctuation">;</span>
+    DWORD   Dr3<span class="token punctuation">;</span>
+    DWORD   Dr6<span class="token punctuation">;</span>
+    DWORD   Dr7<span class="token punctuation">;</span>
+    FLOATING_SAVE_AREA FloatSave<span class="token punctuation">;</span>
+    DWORD   SegGs<span class="token punctuation">;</span>
+    DWORD   SegFs<span class="token punctuation">;</span>
+    DWORD   SegEs<span class="token punctuation">;</span>
+    DWORD   SegDs<span class="token punctuation">;</span>
+    DWORD   Edi<span class="token punctuation">;</span>
+    DWORD   Esi<span class="token punctuation">;</span>
+    DWORD   Ebx<span class="token punctuation">;</span>
+    DWORD   Edx<span class="token punctuation">;</span>
+    DWORD   Ecx<span class="token punctuation">;</span>
+    DWORD   Eax<span class="token punctuation">;</span>
+    DWORD   Ebp<span class="token punctuation">;</span>
+    DWORD   Eip<span class="token punctuation">;</span>
+    DWORD   SegCs<span class="token punctuation">;</span>              <span class="token comment">// MUST BE SANITIZED</span>
+    DWORD   EFlags<span class="token punctuation">;</span>             <span class="token comment">// MUST BE SANITIZED</span>
+    DWORD   Esp<span class="token punctuation">;</span>
+    DWORD   SegSs<span class="token punctuation">;</span>
+    BYTE    ExtendedRegisters<span class="token punctuation">[</span>MAXIMUM_SUPPORTED_EXTENSION<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span> CONTEXT<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>CONTEXT结构体用来备份CPU寄存器的值，因为多线程环境下需要这么做。每个线程内部都有一个CONTEXT结构体。CPU暂时离开当前线程去运行其他线程时，CPU寄存器的值就会保存到当前线程的CONTEXT结构体；CPU再次运行该线程时，会使用保存在CONTEXT结构体的值来覆盖CPU寄存器，然后从之前暂停的代码处继续执行。通过这种方式，OS可以在多线程下安全运行各线程。</p>
+<p>异常发生的时候，执行异常代码的线程就会中断运行，转而运行SEH(异常处理函数)，此时OS会把线程的CONTEXT结构体的指针传递给异常处理函数的参数。这个结构体中有一个EIP，在异常处理函数中将参数传递过来的EIP设置为其他的地址，然后再返回异常处理函数，这样，之前暂停的线程就会执行新设置的EIP地址处的代码，这在反调试中经常使用。</p>
+<h3 id="返回值EXCEPTION-DISPOSITION"><a href="#返回值EXCEPTION-DISPOSITION" class="headerlink" title="返回值EXCEPTION_DISPOSITION"></a>返回值EXCEPTION_DISPOSITION</h3><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">enum</span> <span class="token class-name">_EXCEPTION_DISPOSITION</span>
+<span class="token punctuation">&#123;</span>
+         ExceptionContinueExecution       <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">//回调函数处理了异常，可以从异常发生的指令处重新执行。</span>
+         ExceptionContinueSearch          <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token comment">//回调函数不能处理该异常，需要SEH链中的其他回调函数处理。</span>
+         ExceptionNestedException         <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token comment">//回调函数在执行中又发生了新的异常，即发生了嵌套异常</span>
+         ExceptionCollidedUnwind          <span class="token operator">=</span> <span class="token number">3</span>  <span class="token comment">//发生了嵌套的展开操作</span>
+<span class="token punctuation">&#125;</span> EXCEPTION_DISPOSITION<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="TEB-NtTib-ExceptionList"><a href="#TEB-NtTib-ExceptionList" class="headerlink" title="TEB.NtTib.ExceptionList"></a>TEB.NtTib.ExceptionList</h2><p>通过TEB结构体的NtTib成员可以很容易访问进程的SEH链</p>
+<p>TEB.NtTib.ExceptionList&#x3D;FS:[0]</p>
+<h2 id="SEH安装方法"><a href="#SEH安装方法" class="headerlink" title="SEH安装方法"></a>SEH安装方法</h2><p>在C语言中使用try、except、finally关键词很容易向代码中添加SEH，在汇编语言中添加SEH的方法更加简单</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">PUSH MyHandler<span class="token punctuation">;</span>
+PUSH DWORD PTR FS<span class="token operator">:</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+MOV DWORD PTR FS<span class="token operator">:</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>ESP<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="SEH练习2"><a href="#SEH练习2" class="headerlink" title="SEH练习2"></a>SEH练习2</h1><h2 id="查看SEH链"><a href="#查看SEH链" class="headerlink" title="查看SEH链"></a>查看SEH链</h2><p>用OD打开seh.exe程序，运行到0x401000地址处</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_21-46-09.png"></p>
+<p>圈出来的三条指令就是SEH安装方法的汇编指令，异常函数处理的地址为0x40105A</p>
+<h2 id="通过OD查找SEH链"><a href="#通过OD查找SEH链" class="headerlink" title="通过OD查找SEH链"></a>通过OD查找SEH链</h2><p>在OD中通过View-SEH Chain可以查看SEH链</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_21-58-34.png"></p>
+<h2 id="发生异常"><a href="#发生异常" class="headerlink" title="发生异常"></a>发生异常</h2><p>当发生异常时，OS会把控制器交给调试器，此时并没有执行40105A处的代码，我们在40105A处下断点，然后shift+F12运行，此时会将异常派送给被调试进程自己处理</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_22-03-49.png"></p>
+<p>这个就是异常处理函数，我们可以分析一下</p>
+<h2 id="查看异常处理器参数"><a href="#查看异常处理器参数" class="headerlink" title="查看异常处理器参数"></a>查看异常处理器参数</h2><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_22-05-50.png"></p>
+<p>第一个参数，ESP+4,指向EXCEPTION_RECODE结构体的指针pRecord(12FAC0),前面已经说过该结构体第一个成员是异常类型，第四个成员是异常发生的地址。异常类型为C0000005，发生异常的代码地址为401019</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_22-08-21.png"></p>
+<p>第二个参数，ESP+8，是指向EXCEPTION_REGISTRATION_RECORD的指针pFrame，其值为12FF3C，这是SEH链的起始地址</p>
+<p>第三个参数，ESP+C,是指向CONTEXT结构体的指针pContext(12FADC)，查看指针所指的地址空间</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/2022-03-18_22-13-31.png"></p>
+<p>这里特别注意偏移为B8的位置，这是成员EIP，存放着发生异常的代码地址</p>
+<p>最后一个参数，ESP+10供系统内部使用，可以省略。</p>
+<h2 id="调试异常处理器"><a href="#调试异常处理器" class="headerlink" title="调试异常处理器"></a>调试异常处理器</h2><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20220319143655.png"></p>
+<pre class="line-numbers language-none"><code class="language-none">MOV ESI,DWORD PTR SS:[ESP+C];
+
+ESP+C是异常处理器的第三个参数pContext,此时esi的地址就是pContext
+
+MOV EAX,DWORD PTR FS:[30]
+此时eax存放着PEB的结构体地址
+
+CMP BYTE PTR DS:[EAX+2],1
+读取EAX+2地址中的一个字节，然后与1比较，而EAX+2是PEB中偏移为2的成员，也就是BeingDebugged
+
+JNZ SHORT 00401076
+如果两者不一样就跳转，而此时BeingDebugged&#x3D;1，所以不跳转，继续向下执行
+
+MOV DWORD PTR SS:[ESI+B8],00401023
+由于没有跳转，现在执行该语句，由于 ESI的值是篇ConText，所以B8处的EIP被改为00401023，此时发生异常的线程就会执行401023处的代码
+
+XOR EAX,RAX
+RETN
+最后两句将返回值EAX置0，然后返回，返回0代表了EXCEPTION_CONTINUE_EXECUTION,异常得到处理，相关线程可以继续运行<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20220319144627.png"></p>
+<p>可以看到401023是实现弹出Debugger Detected:(的代码</p>
+<p>401039处的代码是实现弹出Hello:(的代码</p>
+<h2 id="删除SEH"><a href="#删除SEH" class="headerlink" title="删除SEH"></a>删除SEH</h2><p>在程序终止前删除已经注册的SEH</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20220319145311.png"></p>
+<h1 id="设置OD选项"><a href="#设置OD选项" class="headerlink" title="设置OD选项"></a>设置OD选项</h1><p>OllyDbg调试器中提供了调试选项，调试中的程序发生异常时，调试器不会停止，自动将异常派送给被调试者，看上去与正常运行一样。</p>
+<p>在OD的菜单栏中选择我Options—&gt;Debugging options菜单，打开Degbugging options菜单，然后再选择异常选项</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20220319150059.png"></p>
+<p>灵活运用这些选项，可以使我们在调试程序时，跳过异常，使调试过程不会暂停，被调试者会自己通过SEH处理</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 767778848@qq.com </span>
+    </div>
+</article>
+
+
+
+
+
+    <div id="comments"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+<script type="text/javascript">
+    $.getScript('/js/gitalk.js', function () {
+        var gitalk = new Gitalk({
+            clientID: '6c49373fe3729f3c2b02',
+            clientSecret: '4b38338216282f43430b6118f27ae24e4732ecec',
+            repo: 'Whitebird0.github.io',
+            owner: 'Whitebird0',
+            admin: ['Whitebird0'],
+            id: decodeURI(location.pathname),
+            distractionFreeMode: 'true',
+            language: 'zh-CN',
+            perPage: parseInt('10',10)
+        })
+        gitalk.render('comments')
+    })
+</script>
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2020-2022 Whitebird
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

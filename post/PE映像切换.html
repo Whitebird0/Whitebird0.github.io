@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>逆向工程核心原理——PE映像切换 | Whitebird&#39;s Home</title>
+  <meta name="keywords" content=" Reverse ">
+  <meta name="description" content="逆向工程核心原理——PE映像切换 | Whitebird&#39;s Home">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="about">
+<meta property="og:url" content="https://whitebird0.github.io/about/index.html">
+<meta property="og:site_name" content="Whitebird&#39;s Home">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-09T11:26:44.000Z">
+<meta property="article:modified_time" content="2022-07-09T11:26:44.827Z">
+<meta property="article:author" content="Whitebird">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>Whitebird</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="github"
+               href="https://github.com/Whitebird0"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="csdn"
+               href="https://blog.csdn.net/jxnu_666?type=blog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-csdn"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="email"
+               href="mailto:767778848@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=767778848&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="全部文章">全部文章
+            
+                <small>(26)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                <li>
+                    <div data-rel="CTF">
+                        
+                        CTF
+                        <small>(6)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Reverse">
+                        
+                        Reverse
+                        <small>(8)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Android开发">
+                        
+                        Android开发
+                        <small>(10)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Android逆向">
+                        
+                        Android逆向
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Windows内核">
+                        
+                        Windows内核
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  hasFriend  site_url"
+               
+               href="/about">关于</a>
+        
+        <a style="width: 50%"
+                
+                                           class="friends">友链</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="26">
+<input type="hidden" id="yelog_site_word_count" value="139.2k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="https://www.codetea.top/">Codetea</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Android</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>CTF</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Reverse</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Windows内核</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <div id="local-search-result">
+
+    </div>
+    
+    <nav id="title-list-nav">
+        
+        
+        <a  class="全部文章 Android逆向 "
+           href="/post/Frida%E7%9A%84Python%E5%BA%93%E4%BD%BF%E7%94%A8.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android逆向学习笔记——使用Python库调用Frida">Android逆向学习笔记——使用Python库调用Frida</span>
+            <span class="post-date" title="2023-06-01 09:00:15">2023/06/01</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/NDK%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记——NDK开发">Android开发学习笔记——NDK开发</span>
+            <span class="post-date" title="2023-03-31 09:00:14">2023/03/31</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code1.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(1)——初识安卓">Android开发学习笔记(1)——初识安卓</span>
+            <span class="post-date" title="2023-03-30 09:00:21">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code2.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(2)——探究活动">Android开发学习笔记(2)——探究活动</span>
+            <span class="post-date" title="2023-03-30 09:00:20">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code3.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(3)——UI开发">Android开发学习笔记(3)——UI开发</span>
+            <span class="post-date" title="2023-03-30 09:00:19">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code4.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(4)——探究碎片">Android开发学习笔记(4)——探究碎片</span>
+            <span class="post-date" title="2023-03-30 09:00:18">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code5.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(5)——详解广播机制">Android开发学习笔记(5)——详解广播机制</span>
+            <span class="post-date" title="2023-03-30 09:00:17">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code6.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(6)——数据存储全方案">Android开发学习笔记(6)——数据存储全方案</span>
+            <span class="post-date" title="2023-03-30 09:00:16">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code7.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(7)——跨程序共享数据">Android开发学习笔记(7)——跨程序共享数据</span>
+            <span class="post-date" title="2023-03-30 09:00:15">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code8.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(8)——运用手机多媒体">Android开发学习笔记(8)——运用手机多媒体</span>
+            <span class="post-date" title="2023-03-30 09:00:14">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code9.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(9)——网络技术">Android开发学习笔记(9)——网络技术</span>
+            <span class="post-date" title="2023-03-30 09:00:13">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022%E5%B9%B4%E6%B1%9F%E8%A5%BF%E7%9C%81%E2%80%9C%E8%B5%A3%E8%82%B2%E6%9D%AF%E2%80%9D%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9B.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022年江西省“赣育杯”网络安全大赛初赛 Re WriteUp">2022年江西省“赣育杯”网络安全大赛初赛 Re WriteUp</span>
+            <span class="post-date" title="2022-10-08 22:40:21">2022/10/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/qwb.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第六届强网杯全国网络安全挑战赛 Re WriteUp">第六届强网杯全国网络安全挑战赛 Re WriteUp</span>
+            <span class="post-date" title="2022-08-08 15:49:21">2022/08/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/bluecup.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第六届蓝帽杯初赛CTF题目 Re WriteUp">第六届蓝帽杯初赛CTF题目 Re WriteUp</span>
+            <span class="post-date" title="2022-07-13 22:49:21">2022/07/13</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/CISCN2022.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第十五届全国大学生信息安全竞赛创新实践能力赛CISCN">第十五届全国大学生信息安全竞赛创新实践能力赛CISCN</span>
+            <span class="post-date" title="2022-06-03 20:49:21">2022/06/03</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022DASCTF%20Apr%20X%20FATE%20%E9%98%B2%E7%96%AB%E6%8C%91%E6%88%98%E8%B5%9B.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022DASCTF Apr X FATE 防疫挑战赛">2022DASCTF Apr X FATE 防疫挑战赛</span>
+            <span class="post-date" title="2022-06-01 20:49:21">2022/06/01</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/PE%E6%98%A0%E5%83%8F%E5%88%87%E6%8D%A2.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——PE映像切换">逆向工程核心原理——PE映像切换</span>
+            <span class="post-date" title="2022-04-02 10:49:21">2022/04/02</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E6%9C%AF.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——反调试技术">逆向工程核心原理——反调试技术</span>
+            <span class="post-date" title="2022-03-28 10:30:21">2022/03/28</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022-3-26-2022DASCTF-X-SU-Re-WriteUp.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022DASCTF X SU Re WriteUp">2022DASCTF X SU Re WriteUp</span>
+            <span class="post-date" title="2022-03-26 20:49:21">2022/03/26</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/SEH.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——SEH原理分析">逆向工程核心原理——SEH原理分析</span>
+            <span class="post-date" title="2022-03-19 10:49:21">2022/03/19</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/TLS%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——TLS回调函数">逆向工程核心原理——TLS回调函数</span>
+            <span class="post-date" title="2022-03-15 22:49:21">2022/03/15</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E5%85%A8%E5%B1%80API%E9%92%A9%E5%8F%96-IE%E9%93%BE%E6%8E%A5%E6%8E%A7%E5%88%B6.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——全局API钩取">逆向工程核心原理——全局API钩取</span>
+            <span class="post-date" title="2022-03-11 16:49:21">2022/03/11</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E8%AE%A1%E7%AE%97%E5%99%A8%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87%E6%95%B0%E5%AD%97.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——IAT_HOOK">逆向工程核心原理——IAT_HOOK</span>
+            <span class="post-date" title="2022-03-08 22:49:21">2022/03/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E9%80%9A%E8%BF%87%E4%BF%AE%E6%94%B9PE%E5%8A%A0%E8%BD%BDDLL.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——通过修改PE加载DLL">逆向工程核心原理——通过修改PE加载DLL</span>
+            <span class="post-date" title="2022-02-28 22:49:21">2022/02/28</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/DLL%E6%B3%A8%E5%85%A5.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——DLL注入">逆向工程核心原理——DLL注入</span>
+            <span class="post-date" title="2022-02-26 00:49:21">2022/02/26</span>
+        </a>
+        
+        
+        <a  class="全部文章 Windows内核 "
+           href="/post/%E6%AE%B5%E4%B8%8E%E9%A1%B5%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5.html"
+           data-tag="Windows内核"
+           data-author="" >
+            <span class="post-title" title="Windows内核基础知识-段选择子与段描述符">Windows内核基础知识-段选择子与段描述符</span>
+            <span class="post-date" title="2021-10-03 12:40:21">2021/10/03</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-PE映像切换" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">逆向工程核心原理——PE映像切换</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="Reverse">Reverse</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color3">Reverse</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2022-07-09 18:32:18'>2022-04-02 10:49</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:1.7k</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+        <span class="top-comment" title="跳转至评论区">
+            <a href="#comments">
+                评论:<span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </a>
+        </span>
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PE%E6%98%A0%E5%83%8F"><span class="toc-text">PE映像</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PE%E6%98%A0%E5%83%8F%E5%88%87%E6%8D%A2"><span class="toc-text">PE映像切换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E7%A8%8B%E5%BA%8F%EF%BC%9AFake-exe%E3%80%81Real-exe%E3%80%81DebugMe3-exe"><span class="toc-text">示例程序：Fake.exe、Real.exe、DebugMe3.exe</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Fake-exe"><span class="toc-text">Fake.exe</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-exe"><span class="toc-text">Real.exe</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DebugMe3-exe"><span class="toc-text">DebugMe3.exe</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B0%83%E8%AF%95"><span class="toc-text">调试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Open-%E8%BE%93%E5%85%A5%E8%BF%90%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="toc-text">Open-输入运行参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#main-%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90"><span class="toc-text">main()函数分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FUNC-1-401150"><span class="toc-text">FUNC_1_401150</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CreateProcess-%E2%80%9Cfake-exe%E2%80%9D-CREATE-SUSPENDED"><span class="toc-text">CreateProcess(“fake.exe”,CREATE_SUSPENDED)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FUNC-2-4011D0"><span class="toc-text">FUNC_2_4011D0</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96fake-exe%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%AE%9E%E9%99%85%E6%98%A0%E5%B0%84%E5%9C%B0%E5%9D%80"><span class="toc-text">获取fake.exe进程的实际映射地址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96real-exe%E6%96%87%E4%BB%B6%E7%9A%84ImageBase"><span class="toc-text">获取real.exe文件的ImageBase</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AF%94%E8%BE%83ImageBase-of-fake-exe%E5%92%8CImageBase-of-real-exe"><span class="toc-text">比较ImageBase of fake.exe和ImageBase of real.exe</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%A4%E5%80%BC%E7%9B%B8%E5%90%8C%E6%97%B6"><span class="toc-text">两值相同时</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%A4%E5%80%BC%E4%B8%8D%E5%90%8C%E6%97%B6"><span class="toc-text">两值不同时</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FUNC-3-401320"><span class="toc-text">FUNC_3_401320</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BAreal-exe%E7%9A%84PE%E6%98%A0%E5%83%8F%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98"><span class="toc-text">为real.exe的PE映像分配内存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%98%A0%E5%B0%84PE%E6%96%87%E4%BB%B6%E5%A4%B4"><span class="toc-text">映射PE文件头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%98%A0%E5%B0%84%E8%8A%82%E5%8C%BA"><span class="toc-text">映射节区</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9EP"><span class="toc-text">修改EP</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ResumeThread"><span class="toc-text">ResumeThread()</span></a></li></ol></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="PE映像"><a href="#PE映像" class="headerlink" title="PE映像"></a>PE映像</h1><p>PE映像就是PE文件在内存中的映射形态，这在之前PE文件学习中也讲过，32位下OS为进程开辟4GB虚拟空间，低2G为用户空间，高2G是内核空间。</p>
+<p>PE文件映射到内存空间中是一个拉伸的过程</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/image-7.png"></p>
+<h1 id="PE映像切换"><a href="#PE映像切换" class="headerlink" title="PE映像切换"></a>PE映像切换</h1><p>PE映像切换就是先以挂起的方式运行某个进程(A.exe),然后将完全不同的一个PE文件(B.exe)的PE映像映射到A.exe的进程内存空间中，并在A.exe的内存空间中运行。</p>
+<p>此时虽然运行的进程名称是A.exe,但实际映射在内存中的PE映射却是B.exe,所以最终的行为动作与A.exe原来的行为动作完全不同。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/image-8.png"></p>
+<h1 id="示例程序：Fake-exe、Real-exe、DebugMe3-exe"><a href="#示例程序：Fake-exe、Real-exe、DebugMe3-exe" class="headerlink" title="示例程序：Fake.exe、Real.exe、DebugMe3.exe"></a>示例程序：Fake.exe、Real.exe、DebugMe3.exe</h1><h2 id="Fake-exe"><a href="#Fake-exe" class="headerlink" title="Fake.exe"></a>Fake.exe</h2><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_15-30-47.png"></p>
+<h2 id="Real-exe"><a href="#Real-exe" class="headerlink" title="Real.exe"></a>Real.exe</h2><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_15-30-56.png"></p>
+<h2 id="DebugMe3-exe"><a href="#DebugMe3-exe" class="headerlink" title="DebugMe3.exe"></a>DebugMe3.exe</h2><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_15-31-24.png"></p>
+<p>DebugMe3.exe是以fake.exe为外壳，real.exe为内核程序</p>
+<p>要注意在控制台窗口输入运行命令时，命令的第一个参数为充当外壳进程的可执行文件路径，第二个参数为充当内核进程的可执行文件路径</p>
+<h1 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h1><h2 id="Open-输入运行参数"><a href="#Open-输入运行参数" class="headerlink" title="Open-输入运行参数"></a>Open-输入运行参数</h2><p>以参数的方式打开DebugMe3.exe</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_15-52-17.png"></p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_15-53-50.png"></p>
+<p>这里就是EP代码</p>
+<h2 id="main-函数分析"><a href="#main-函数分析" class="headerlink" title="main()函数分析"></a>main()函数分析</h2><p>代码流程图</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_16-40-50.png"></p>
+<p>CreateProcess()和ResumeThread()的行为动作明确，所以我们主要分析main调用的三个子函数</p>
+<h3 id="FUNC-1-401150"><a href="#FUNC-1-401150" class="headerlink" title="FUNC_1_401150"></a>FUNC_1_401150</h3><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_16-43-30.png"></p>
+<p>该函数是将real.exe文件读取到内存，将内存地址记为MEM_FILE_REAL_EXE</p>
+<h3 id="CreateProcess-“fake-exe”-CREATE-SUSPENDED"><a href="#CreateProcess-“fake-exe”-CREATE-SUSPENDED" class="headerlink" title="CreateProcess(“fake.exe”,CREATE_SUSPENDED)"></a>CreateProcess(“fake.exe”,CREATE_SUSPENDED)</h3><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-08-26.png"></p>
+<p>调用CreateProcess创建fake.exe进程，此时的进程处于挂起状态，同时也是暂停状态，此时可以自由操作其对应的内存。</p>
+<h3 id="FUNC-2-4011D0"><a href="#FUNC-2-4011D0" class="headerlink" title="FUNC_2_4011D0"></a>FUNC_2_4011D0</h3><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-21-37.png"></p>
+<p>这个函数里面实现了PE映像切换技术，我们逐步分析</p>
+<h4 id="获取fake-exe进程的实际映射地址"><a href="#获取fake-exe进程的实际映射地址" class="headerlink" title="获取fake.exe进程的实际映射地址"></a>获取fake.exe进程的实际映射地址</h4><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-26-48.png"></p>
+<p>这是获取fake.exe的主线程上下文，然后我们可以通过它来获取进程的PEB,由PEB.ImageBase得到进程的实际映射地址</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-37-29.png"></p>
+<p>[EBP-2D0]是ConText结构体，[EBP-22C]是ConText偏移A4的成员，也就是Ebx</p>
+<p>因为当前的fake.exe是以挂起模式创建的，处于暂停状态，进程被创建出来时，PE装载器就会把PEB结构体的地址设置给Ebx寄存器，所以当我们获取到Ebx寄存器的值就必须先获取进程主线程的上下文</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-43-02.png"></p>
+<p>此时的ECX就是PEB首地址，偏移为8的地方就是ImageBase，所以先执行add ecx+8</p>
+<ul>
+<li>PS：对于Win XP的EXE文件来说，PE文件头中的ImageBase就是进程的实际映射地址</li>
+<li>PS：Win Vista（内核6以后），引入了ASLR技术，ImageBase与实际映射地址不在相同</li>
+</ul>
+<h4 id="获取real-exe文件的ImageBase"><a href="#获取real-exe文件的ImageBase" class="headerlink" title="获取real.exe文件的ImageBase"></a>获取real.exe文件的ImageBase</h4><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_17-47-47.png"></p>
+<p>EDI寄存器的值为MEM_FILE_REAL_EXE地址，该地址是在FUNC1中分配得到的内存起始地址，而real.exe被原封不动的保存在其中。也就是说EDI指向real.exe文件的PE头，所以EDI+3C就是IMAGE_DOS_HEADER结构体中的e_lfanew</p>
+<p>[EDI+EAX]&#x3D;IMAGE_NT_HEADER的起始地址</p>
+<p>[EDI+EAX+34]指向IMAGE_OPTION_HEADER的ImageBase成员</p>
+<p>执行上面指令后，real.exe的ImageBase就被存入了ECX寄存器中</p>
+<h4 id="比较ImageBase-of-fake-exe和ImageBase-of-real-exe"><a href="#比较ImageBase-of-fake-exe和ImageBase-of-real-exe" class="headerlink" title="比较ImageBase of fake.exe和ImageBase of real.exe"></a>比较ImageBase of fake.exe和ImageBase of real.exe</h4><h5 id="两值相同时"><a href="#两值相同时" class="headerlink" title="两值相同时"></a>两值相同时</h5><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_18-12-35.png"></p>
+<p>如果相同就继续往下执行，如果不相同就跳到004012EA</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/image-25.png"></p>
+<p>当fake.exe的PE镜像已经映射到400000地址处，地址400000也是real.exe的PE映像要映射的地方，若强行映射到该地址处，就会发生冲突，必须先卸载(Unmapping)fake.exe的PE映像的映射。由于fake.exe进程处于挂起状态，所以卸载PE映像时进程中也不会发生错误。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_19-43-42.png"></p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">NTSYSAPI NTSTATUS ZwUnmapViewOfSection(
+  [in]           HANDLE ProcessHandle,
+  [in, optional] PVOID  BaseAddress
+);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="两值不同时"><a href="#两值不同时" class="headerlink" title="两值不同时"></a>两值不同时</h5><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/image-26.png"></p>
+<p>这时候不一定要卸载fake.exe的PE映像，可以先在fake.exe进程的虚拟内存空间中为real.exe的PE映像分配所需要的空间，然后将real.exe映射进去就行了。接下来还得告诉PE装载器，fake.exe进程的PE映像是400000地址处的real.exe，而不是 1000000地址处的fake.exe,简单修改PEB的ImageBase成员就行了</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_19-54-21.png"></p>
+<p>通过调用WriteProcessMemory()API成功将fake.exe进程的PEB.ImageBase改为real.exe文件的ImageBase值，此时fake.exe进程的PE映就被卸载了。</p>
+<h3 id="FUNC-3-401320"><a href="#FUNC-3-401320" class="headerlink" title="FUNC_3_401320"></a>FUNC_3_401320</h3><p>现在需要把real.exe的文件映射到fake.exe进程中，main函数的4010D1地址调用了FUNC_3_401320，进入FUNC3分析</p>
+<h4 id="为real-exe的PE映像分配内存"><a href="#为real-exe的PE映像分配内存" class="headerlink" title="为real.exe的PE映像分配内存"></a>为real.exe的PE映像分配内存</h4><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-03-52.png"></p>
+<p>这个就是为real.exe的PE映像分配内存</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-05-21.png"></p>
+<p>第二个参数是想要分配的内存起始地址，其值为real.exe的ImageBase(0x4000000)；函数的第三个参数是要分配内存大小，其值为real.exe的SizeofImage(0xA000)；</p>
+<h4 id="映射PE文件头"><a href="#映射PE文件头" class="headerlink" title="映射PE文件头"></a>映射PE文件头</h4><p>为real.exe的PE映像分配好内存空间后，接下来就是要将real.exe映射到fake.exe进程中。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-27-40.png"></p>
+<p>调用WriteProcessMemory()API将real.exePE文件头写入到刚刚分配的内存区域，0x262CF8是由FUNC1函数读入到debug3.exe内存中的</p>
+<p>BytesToWrite参数为real.exe的sizeofHeader(0x4000)</p>
+<h4 id="映射节区"><a href="#映射节区" class="headerlink" title="映射节区"></a>映射节区</h4><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-28-42.png"></p>
+<p>启动循环，根据节区的数量反复调用WriteProcessMemory，映射PE节区。该过程需要读取的信息是读取PE文件头的IMAGE_SECTION_HEADER。循环结束后，real.exe文件被完全映射到fake.exe进程的40000地址处，但是此时real.exe代码还无法正常运行，需要修改进程的EP.</p>
+<h4 id="修改EP"><a href="#修改EP" class="headerlink" title="修改EP"></a>修改EP</h4><p>现在fake.exe处于挂起状态，将其恢复运行后，进程的主线程会运行何处的代码呢？这时候我们需要查看主线程CONTEXT结构体中的Eip成员</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-34-15.png"></p>
+<p>CONTEXT中有两个成员需要注意，一个就是EAX与EIP，分别位于结构体偏移B0和B8处，EAX&#x3D;0x00401041，这个值很可能位于fake.exe进程中，我们用PE工具查看一下</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-36-18.png"></p>
+<p>如图所示，EAX值是fake.exe进程的EP地址，接下来看CONTEXT.EIP，其值为0x77C67098,在调试器中查看一下该地址</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-39-34.png"></p>
+<p>可以发现这个地址是ntdll.RtlUserThreadStart()API开始的地址，我们已知EIP寄存器存储的是要执行的指令代码的地址，而EAX存放返回地址，查看CONTEXT的EAX和EIP后，我们可以整理一下上面的代码执行过程：处于挂起状态的fake.exe进程恢复运行，首先会调用ntdll.RtlUserThreadStart()，跳转到EP地址。前面已经将fake.exe的进程PE映像替换为了real.exe的PE映像，所以我们只需要将CONTEXT.EAX修改为real.exe的EP地址(0x401060)</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-43-59.png"></p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-45-52.png"></p>
+<p>0x4014A2-0x4014B3就是将real.exe的EP地址设置到CONTEXT.EAX中</p>
+<h3 id="ResumeThread"><a href="#ResumeThread" class="headerlink" title="ResumeThread()"></a>ResumeThread()</h3><p>最后调用ResumeThread()，恢复运行fake.exe进程。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/2022-04-02_20-47-55.png"></p>
+<p>通过上面的调试练习，我们学会了PE映像切换技术的工作原理。</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 767778848@qq.com </span>
+    </div>
+</article>
+
+
+
+
+
+    <div id="comments"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+<script type="text/javascript">
+    $.getScript('/js/gitalk.js', function () {
+        var gitalk = new Gitalk({
+            clientID: '6c49373fe3729f3c2b02',
+            clientSecret: '4b38338216282f43430b6118f27ae24e4732ecec',
+            repo: 'Whitebird0.github.io',
+            owner: 'Whitebird0',
+            admin: ['Whitebird0'],
+            id: decodeURI(location.pathname),
+            distractionFreeMode: 'true',
+            language: 'zh-CN',
+            perPage: parseInt('10',10)
+        })
+        gitalk.render('comments')
+    })
+</script>
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2020-2022 Whitebird
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>逆向工程核心原理——反调试技术 | Whitebird&#39;s Home</title>
+  <meta name="keywords" content=" Reverse ">
+  <meta name="description" content="逆向工程核心原理——反调试技术 | Whitebird&#39;s Home">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="about">
+<meta property="og:url" content="https://whitebird0.github.io/about/index.html">
+<meta property="og:site_name" content="Whitebird&#39;s Home">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-09T11:26:44.000Z">
+<meta property="article:modified_time" content="2022-07-09T11:26:44.827Z">
+<meta property="article:author" content="Whitebird">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>Whitebird</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="github"
+               href="https://github.com/Whitebird0"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="csdn"
+               href="https://blog.csdn.net/jxnu_666?type=blog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-csdn"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="email"
+               href="mailto:767778848@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=767778848&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="全部文章">全部文章
+            
+                <small>(26)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                <li>
+                    <div data-rel="CTF">
+                        
+                        CTF
+                        <small>(6)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Reverse">
+                        
+                        Reverse
+                        <small>(8)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Android开发">
+                        
+                        Android开发
+                        <small>(10)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Android逆向">
+                        
+                        Android逆向
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Windows内核">
+                        
+                        Windows内核
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  hasFriend  site_url"
+               
+               href="/about">关于</a>
+        
+        <a style="width: 50%"
+                
+                                           class="friends">友链</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="26">
+<input type="hidden" id="yelog_site_word_count" value="139.2k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="https://www.codetea.top/">Codetea</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Android</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>CTF</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Reverse</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Windows内核</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <div id="local-search-result">
+
+    </div>
+    
+    <nav id="title-list-nav">
+        
+        
+        <a  class="全部文章 Android逆向 "
+           href="/post/Frida%E7%9A%84Python%E5%BA%93%E4%BD%BF%E7%94%A8.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android逆向学习笔记——使用Python库调用Frida">Android逆向学习笔记——使用Python库调用Frida</span>
+            <span class="post-date" title="2023-06-01 09:00:15">2023/06/01</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/NDK%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记——NDK开发">Android开发学习笔记——NDK开发</span>
+            <span class="post-date" title="2023-03-31 09:00:14">2023/03/31</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code1.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(1)——初识安卓">Android开发学习笔记(1)——初识安卓</span>
+            <span class="post-date" title="2023-03-30 09:00:21">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code2.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(2)——探究活动">Android开发学习笔记(2)——探究活动</span>
+            <span class="post-date" title="2023-03-30 09:00:20">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code3.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(3)——UI开发">Android开发学习笔记(3)——UI开发</span>
+            <span class="post-date" title="2023-03-30 09:00:19">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code4.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(4)——探究碎片">Android开发学习笔记(4)——探究碎片</span>
+            <span class="post-date" title="2023-03-30 09:00:18">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code5.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(5)——详解广播机制">Android开发学习笔记(5)——详解广播机制</span>
+            <span class="post-date" title="2023-03-30 09:00:17">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code6.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(6)——数据存储全方案">Android开发学习笔记(6)——数据存储全方案</span>
+            <span class="post-date" title="2023-03-30 09:00:16">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code7.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(7)——跨程序共享数据">Android开发学习笔记(7)——跨程序共享数据</span>
+            <span class="post-date" title="2023-03-30 09:00:15">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code8.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(8)——运用手机多媒体">Android开发学习笔记(8)——运用手机多媒体</span>
+            <span class="post-date" title="2023-03-30 09:00:14">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code9.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(9)——网络技术">Android开发学习笔记(9)——网络技术</span>
+            <span class="post-date" title="2023-03-30 09:00:13">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022%E5%B9%B4%E6%B1%9F%E8%A5%BF%E7%9C%81%E2%80%9C%E8%B5%A3%E8%82%B2%E6%9D%AF%E2%80%9D%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9B.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022年江西省“赣育杯”网络安全大赛初赛 Re WriteUp">2022年江西省“赣育杯”网络安全大赛初赛 Re WriteUp</span>
+            <span class="post-date" title="2022-10-08 22:40:21">2022/10/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/qwb.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第六届强网杯全国网络安全挑战赛 Re WriteUp">第六届强网杯全国网络安全挑战赛 Re WriteUp</span>
+            <span class="post-date" title="2022-08-08 15:49:21">2022/08/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/bluecup.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第六届蓝帽杯初赛CTF题目 Re WriteUp">第六届蓝帽杯初赛CTF题目 Re WriteUp</span>
+            <span class="post-date" title="2022-07-13 22:49:21">2022/07/13</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/CISCN2022.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第十五届全国大学生信息安全竞赛创新实践能力赛CISCN">第十五届全国大学生信息安全竞赛创新实践能力赛CISCN</span>
+            <span class="post-date" title="2022-06-03 20:49:21">2022/06/03</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022DASCTF%20Apr%20X%20FATE%20%E9%98%B2%E7%96%AB%E6%8C%91%E6%88%98%E8%B5%9B.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022DASCTF Apr X FATE 防疫挑战赛">2022DASCTF Apr X FATE 防疫挑战赛</span>
+            <span class="post-date" title="2022-06-01 20:49:21">2022/06/01</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/PE%E6%98%A0%E5%83%8F%E5%88%87%E6%8D%A2.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——PE映像切换">逆向工程核心原理——PE映像切换</span>
+            <span class="post-date" title="2022-04-02 10:49:21">2022/04/02</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E6%9C%AF.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——反调试技术">逆向工程核心原理——反调试技术</span>
+            <span class="post-date" title="2022-03-28 10:30:21">2022/03/28</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022-3-26-2022DASCTF-X-SU-Re-WriteUp.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022DASCTF X SU Re WriteUp">2022DASCTF X SU Re WriteUp</span>
+            <span class="post-date" title="2022-03-26 20:49:21">2022/03/26</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/SEH.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——SEH原理分析">逆向工程核心原理——SEH原理分析</span>
+            <span class="post-date" title="2022-03-19 10:49:21">2022/03/19</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/TLS%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——TLS回调函数">逆向工程核心原理——TLS回调函数</span>
+            <span class="post-date" title="2022-03-15 22:49:21">2022/03/15</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E5%85%A8%E5%B1%80API%E9%92%A9%E5%8F%96-IE%E9%93%BE%E6%8E%A5%E6%8E%A7%E5%88%B6.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——全局API钩取">逆向工程核心原理——全局API钩取</span>
+            <span class="post-date" title="2022-03-11 16:49:21">2022/03/11</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E8%AE%A1%E7%AE%97%E5%99%A8%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87%E6%95%B0%E5%AD%97.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——IAT_HOOK">逆向工程核心原理——IAT_HOOK</span>
+            <span class="post-date" title="2022-03-08 22:49:21">2022/03/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E9%80%9A%E8%BF%87%E4%BF%AE%E6%94%B9PE%E5%8A%A0%E8%BD%BDDLL.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——通过修改PE加载DLL">逆向工程核心原理——通过修改PE加载DLL</span>
+            <span class="post-date" title="2022-02-28 22:49:21">2022/02/28</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/DLL%E6%B3%A8%E5%85%A5.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——DLL注入">逆向工程核心原理——DLL注入</span>
+            <span class="post-date" title="2022-02-26 00:49:21">2022/02/26</span>
+        </a>
+        
+        
+        <a  class="全部文章 Windows内核 "
+           href="/post/%E6%AE%B5%E4%B8%8E%E9%A1%B5%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5.html"
+           data-tag="Windows内核"
+           data-author="" >
+            <span class="post-title" title="Windows内核基础知识-段选择子与段描述符">Windows内核基础知识-段选择子与段描述符</span>
+            <span class="post-date" title="2021-10-03 12:40:21">2021/10/03</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-反调试技术" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">逆向工程核心原理——反调试技术</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="Reverse">Reverse</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color3">Reverse</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2023-03-31 01:15:33'>2022-03-28 10:30</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:6.8k</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+        <span class="top-comment" title="跳转至评论区">
+            <a href="#comments">
+                评论:<span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </a>
+        </span>
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E6%9C%AF%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-text">反调试技术的分类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E6%9C%AF"><span class="toc-text">静态反调试技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PEB"><span class="toc-text">PEB</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BeingDebugged-0x2"><span class="toc-text">BeingDebugged(+0x2)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#IsDebuggerPresent"><span class="toc-text">IsDebuggerPresent()</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95"><span class="toc-text">破解之法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Ldr-0xC"><span class="toc-text">Ldr(+0xC)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-1"><span class="toc-text">破解之法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8F%90%E7%A4%BA"><span class="toc-text">提示</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ProcessHeap-0x18"><span class="toc-text">ProcessHeap(+0x18)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Flags-0xC-Force-Flags-0x10"><span class="toc-text">Flags(+0xC)&amp;Force Flags(+0x10)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-2"><span class="toc-text">破解之法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8F%90%E7%A4%BA-1"><span class="toc-text">提示</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NtGlobalFlag-0x68"><span class="toc-text">NtGlobalFlag(+0x68)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-3"><span class="toc-text">破解之法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NtQueryInformationProcess"><span class="toc-text">NtQueryInformationProcess()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ProcessDebugPort%EF%BC%880x7%EF%BC%89"><span class="toc-text">ProcessDebugPort（0x7）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ProcessDebugObjectHandle-0x1E"><span class="toc-text">ProcessDebugObjectHandle(0x1E)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ProcessDebugFlags-0x1F"><span class="toc-text">ProcessDebugFlags(0x1F)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NtQuerySystemInformation"><span class="toc-text">NtQuerySystemInformation()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SystemKernelDebuggerInformation-0x23"><span class="toc-text">SystemKernelDebuggerInformation(0x23)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NtQueryObject"><span class="toc-text">NtQueryObject()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-text">使用方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%E3%80%81%E8%8E%B7%E5%8F%96%E5%86%85%E6%A0%B8%E5%AF%B9%E8%B1%A1%E4%BF%A1%E6%81%AF%E9%93%BE%E8%A1%A8%E5%A4%A7%E5%B0%8F"><span class="toc-text">1、获取内核对象信息链表大小</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98"><span class="toc-text">2、分配内存</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%86%85%E6%A0%B8%E5%AF%B9%E8%B1%A1%E4%BF%A1%E6%81%AF%E9%93%BE%E8%A1%A8"><span class="toc-text">获取内核对象信息链表</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-4"><span class="toc-text">破解之法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZwSetInformationThread"><span class="toc-text">ZwSetInformationThread()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-5"><span class="toc-text">破解之法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-text">原理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TLS%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="toc-text">TLS回调函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ETC"><span class="toc-text">ETC</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%A0%E7%A7%8D%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E6%9C%AF"><span class="toc-text">常用的几种反调试技术</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E6%9C%AF"><span class="toc-text">动态反调试技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E6%9C%AF%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="toc-text">动态反调试技术的目的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8"><span class="toc-text">异常</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SEH"><span class="toc-text">SEH</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%E3%80%81%E5%AE%89%E8%A3%85SEH"><span class="toc-text">1、安装SEH</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81%E8%A7%A6%E5%8F%91INT-3-%E5%BC%82%E5%B8%B8"><span class="toc-text">2、触发INT 3 异常</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1%E3%80%81%E8%B0%83%E8%AF%95%E8%BF%90%E8%A1%8C%E2%80%94%E7%BB%88%E6%AD%A2%E8%BF%9B%E7%A8%8B"><span class="toc-text">3-1、调试运行—终止进程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2%E3%80%81%E6%AD%A3%E5%B8%B8%E8%BF%90%E8%A1%8C%E2%80%94%E8%BF%90%E8%A1%8CSEH"><span class="toc-text">3-2、正常运行—运行SEH</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%A0%E9%99%A4SEH"><span class="toc-text">删除SEH</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-6"><span class="toc-text">破解之法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SetUnhandledExceptionFilter"><span class="toc-text">SetUnhandledExceptionFilter()</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-7"><span class="toc-text">破解之法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Timing-Check"><span class="toc-text">Timing Check</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E9%97%B4%E9%9A%94%E6%B5%8B%E9%87%8F%E6%B3%95"><span class="toc-text">时间间隔测量法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RDTSC"><span class="toc-text">RDTSC</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-8"><span class="toc-text">破解之法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%B7%E9%98%B1%E6%A0%87%E5%BF%97"><span class="toc-text">陷阱标志</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8D%95%E6%AD%A5%E6%89%A7%E8%A1%8C"><span class="toc-text">单步执行</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-9"><span class="toc-text">破解之法</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#INT-2D"><span class="toc-text">INT 2D</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-10"><span class="toc-text">破解之法</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0xCC-%E6%8E%A2%E6%B5%8B"><span class="toc-text">0xCC 探测</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#API%E6%96%AD%E7%82%B9"><span class="toc-text">API断点</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%80%86%E5%90%91%E4%BA%BA%E5%91%98%E5%B8%B8%E7%94%A8API%E5%88%97%E8%A1%A8%EF%BC%9A"><span class="toc-text">代码逆向人员常用API列表：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-11"><span class="toc-text">破解之法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AF%94%E8%BE%83%E6%A0%A1%E9%AA%8C%E5%92%8C"><span class="toc-text">比较校验和</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95-12"><span class="toc-text">破解之法</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="反调试技术的分类"><a href="#反调试技术的分类" class="headerlink" title="反调试技术的分类"></a>反调试技术的分类</h1><p>反调试技术多种多样，大体上可以分成静态与动态两组反调试。调试运用了静态技术的程序文件时只要在开始破解一次就可以解除全部反调试限制，但运用了动态技术的程序则需要一边调试一边破解。</p>
+<h2 id="静态反调试技术"><a href="#静态反调试技术" class="headerlink" title="静态反调试技术"></a>静态反调试技术</h2><p>主要用来探测调试器，如果探测到，则使程序无法正常运行。所以一般在调试器中打开应用了静态反调试技术的文件时，文件将无法正常运行。</p>
+<h3 id="PEB"><a href="#PEB" class="headerlink" title="PEB"></a>PEB</h3><p>利用PEB结构体信息可以判断当前进程是否处于被调试状态。这些信息值得信赖、使用方便，所以被广泛应用于反调试技术，</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token operator">+</span><span class="token number">0x000</span> InheritedAddressSpace <span class="token operator">:</span> UChar
+ <span class="token operator">+</span><span class="token number">0x001</span> ReadImageFileExecOptions <span class="token operator">:</span> UChar
+ <span class="token operator">+</span><span class="token number">0x002</span> BeingDebugged    <span class="token operator">:</span> UChar
+ <span class="token operator">+</span><span class="token number">0x003</span> SpareBool        <span class="token operator">:</span> UChar
+ <span class="token operator">+</span><span class="token number">0x004</span> Mutant           <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x008</span> ImageBaseAddress <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x00c</span> Ldr              <span class="token operator">:</span> Ptr32 _PEB_LDR_DATA
+ <span class="token operator">+</span><span class="token number">0x010</span> ProcessParameters <span class="token operator">:</span> Ptr32 _RTL_USER_PROCESS_PARAMETERS
+ <span class="token operator">+</span><span class="token number">0x014</span> SubSystemData    <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x018</span> ProcessHeap      <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x01c</span> FastPebLock      <span class="token operator">:</span> Ptr32 _RTL_CRITICAL_SECTION
+ <span class="token operator">+</span><span class="token number">0x020</span> FastPebLockRoutine <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x024</span> FastPebUnlockRoutine <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x028</span> EnvironmentUpdateCount <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x02c</span> KernelCallbackTable <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x030</span> SystemReserved   <span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x034</span> AtlThunkSListPtr32 <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x038</span> FreeList         <span class="token operator">:</span> Ptr32 _PEB_FREE_BLOCK
+ <span class="token operator">+</span><span class="token number">0x03c</span> TlsExpansionCounter <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x040</span> TlsBitmap        <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x044</span> TlsBitmapBits    <span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x04c</span> ReadOnlySharedMemoryBase <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x050</span> ReadOnlySharedMemoryHeap <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x054</span> ReadOnlyStaticServerData <span class="token operator">:</span> Ptr32 Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x058</span> AnsiCodePageData <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x05c</span> OemCodePageData  <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x060</span> UnicodeCaseTableData <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x064</span> NumberOfProcessors <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x068</span> NtGlobalFlag     <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x070</span> CriticalSectionTimeout <span class="token operator">:</span> _LARGE_INTEGER
+ <span class="token operator">+</span><span class="token number">0x078</span> HeapSegmentReserve <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x07c</span> HeapSegmentCommit <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x080</span> HeapDeCommitTotalFreeThreshold <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x084</span> HeapDeCommitFreeBlockThreshold <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x088</span> NumberOfHeaps    <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x08c</span> MaximumNumberOfHeaps <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x090</span> ProcessHeaps     <span class="token operator">:</span> Ptr32 Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x094</span> GdiSharedHandleTable <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x098</span> ProcessStarterHelper <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x09c</span> GdiDCAttributeList <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x0a0</span> LoaderLock       <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x0a4</span> OSMajorVersion   <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x0a8</span> OSMinorVersion   <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x0ac</span> OSBuildNumber    <span class="token operator">:</span> Uint2B
+ <span class="token operator">+</span><span class="token number">0x0ae</span> OSCSDVersion     <span class="token operator">:</span> Uint2B
+ <span class="token operator">+</span><span class="token number">0x0b0</span> OSPlatformId     <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x0b4</span> ImageSubsystem   <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x0b8</span> ImageSubsystemMajorVersion <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x0bc</span> ImageSubsystemMinorVersion <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x0c0</span> ImageProcessAffinityMask <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x0c4</span> GdiHandleBuffer  <span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">34</span><span class="token punctuation">]</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x14c</span> PostProcessInitRoutine <span class="token operator">:</span> Ptr32     <span class="token keyword">void</span> 
+ <span class="token operator">+</span><span class="token number">0x150</span> TlsExpansionBitmap <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x154</span> TlsExpansionBitmapBits <span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">32</span><span class="token punctuation">]</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x1d4</span> SessionId        <span class="token operator">:</span> Uint4B
+ <span class="token operator">+</span><span class="token number">0x1d8</span> AppCompatFlags   <span class="token operator">:</span> _ULARGE_INTEGER
+ <span class="token operator">+</span><span class="token number">0x1e0</span> AppCompatFlagsUser <span class="token operator">:</span> _ULARGE_INTEGER
+ <span class="token operator">+</span><span class="token number">0x1e8</span> pShimData        <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x1ec</span> AppCompatInfo    <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x1f0</span> CSDVersion       <span class="token operator">:</span> _UNICODE_STRING
+ <span class="token operator">+</span><span class="token number">0x1f8</span> ActivationContextData <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x1fc</span> ProcessAssemblyStorageMap <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x200</span> SystemDefaultActivationContextData <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x204</span> SystemAssemblyStorageMap <span class="token operator">:</span> Ptr32 Void
+ <span class="token operator">+</span><span class="token number">0x208</span> MinimumStackCommit <span class="token operator">:</span> Uint4B<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这个是Windows XP SP3中的PEB结构体成员，与反调试技术密切相关的成员有以下几个:</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token operator">+</span><span class="token number">0x002</span>  BeingDebugged    <span class="token operator">:</span> UChar
+<span class="token operator">+</span><span class="token number">0x00c</span>  Ldr              <span class="token operator">:</span> Ptr32 _PEB_LDR_DATA
+<span class="token operator">+</span><span class="token number">0x018</span>	ProcessHeap      <span class="token operator">:</span> Ptr32 Void
+<span class="token operator">+</span><span class="token number">0x068</span> 	NtGlobalFlag     <span class="token operator">:</span> Uint4B<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>BeingDebugged成员是一个标志，用来表示进程是否处于被调试状态。</p>
+<p>Ldr、ProcessHeap、NtGlobalFlag成员与被调试进程的堆内存特性相关。接下来分别讲解以上4个PEB成员</p>
+<h4 id="BeingDebugged-0x2"><a href="#BeingDebugged-0x2" class="headerlink" title="BeingDebugged(+0x2)"></a>BeingDebugged(+0x2)</h4><p>当进程处于调试状态时，PEB.BeingDebugged成员(+0x2)的值会被设置为1，进程在非调试状态下运行时，其值被设置为0</p>
+<h5 id="IsDebuggerPresent"><a href="#IsDebuggerPresent" class="headerlink" title="IsDebuggerPresent()"></a>IsDebuggerPresent()</h5><p>IsDebuggerPresent()API获取PEB.BeingDebugged的值来判断进程是否处于被调试状态。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20220321163655.png"></p>
+<p>IsDebuggerPresentd的代码非常简单，先找到PEB结构，然后访问PEB.BeingDebugged成员(+0x2)。</p>
+<h5 id="破解之法"><a href="#破解之法" class="headerlink" title="破解之法"></a>破解之法</h5><p>在调试的时候，借助OD调试器的编辑功能，将PEB.BeingDebugged的值修改成0即可</p>
+<h4 id="Ldr-0xC"><a href="#Ldr-0xC" class="headerlink" title="Ldr(+0xC)"></a>Ldr(+0xC)</h4><p>在调试进程中，其堆内存中就会出现一些特殊标识，表示它正处于被调试状态，其中最醒目的就是，未使用的堆内存区域全部填充着0xEEFEEEFE,这证明正在调试进程。利用这一特征可以判断进程是否处于调试状态。</p>
+<p>PEB.Ldr成员是一个指向_PEB_LDR_DATA结构体的指针，而 _PEB_LDR_DATA结构体刚好是在堆内存区域中创建的，所以扫描该区域就可以轻松查找到是否存在0xEEFEEEFE区域，如果存在就是调试，不存在就不在调试状态。</p>
+<h5 id="破解之法-1"><a href="#破解之法-1" class="headerlink" title="破解之法"></a>破解之法</h5><p>只要将填充0xEEFEEEFE值的区域全部覆盖成NULL就行了</p>
+<h5 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h5><p>这个方法仅适用于WindowsXP系统，而在Windows Vista以后的系统中就无法使用了。另外，利用附加功能将运行中的进程附加到调试器上，堆内存不会出现上述情况。</p>
+<h4 id="ProcessHeap-0x18"><a href="#ProcessHeap-0x18" class="headerlink" title="ProcessHeap(+0x18)"></a>ProcessHeap(+0x18)</h4><p>在PEB的偏移0x18是指向HEAP结构体的指针</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token operator">+</span><span class="token number">0x000</span> Entry 
+<span class="token operator">+</span><span class="token number">0x008</span> Signature
+<span class="token operator">+</span><span class="token number">0x00c</span> Flags
+<span class="token operator">+</span><span class="token number">0x010</span> ForceFlags
+<span class="token operator">+</span><span class="token number">0x014</span> VirtualMemoryThreshold
+<span class="token operator">+</span><span class="token number">0x018</span> SegmentReserve
+<span class="token operator">+</span><span class="token number">0x01c</span> SegmentCommit
+<span class="token operator">+</span><span class="token number">0x020</span> DeCommitFreeBlockThreshold<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这是HEAP结构体的部分成员，进程处于被调试状态时，Flags与ForceFlags会被设置为特定值</p>
+<p>PEB.ProcessHeap()可以从PEB结构体中直接获取HEAP结构体(偏移0x18)，也可以通过GetProcessHeap()API获取。</p>
+<img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20220325170054.png" style="zoom:200%;" />
+
+<p>进程HEAP结构体的地址为PEB.ProcessHeap&#x3D;190000</p>
+<h5 id="Flags-0xC-Force-Flags-0x10"><a href="#Flags-0xC-Force-Flags-0x10" class="headerlink" title="Flags(+0xC)&amp;Force Flags(+0x10)"></a>Flags(+0xC)&amp;Force Flags(+0x10)</h5><p>进程正常运行时，Flags为0x2，而ForceFlags值为0x0，但是进程处于被调试状态时，这些值就会发生改变</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20220325171341.png"></p>
+<p>所以，比较这些值就可以判断进程是否处于被调试状态</p>
+<h5 id="破解之法-2"><a href="#破解之法-2" class="headerlink" title="破解之法"></a>破解之法</h5><p>只要将Flags的值重新设置为0x2，ForceFlags的值重新设置成0x0就行了。</p>
+<h5 id="提示-1"><a href="#提示-1" class="headerlink" title="提示"></a>提示</h5><p>这个方法只能在Windows XP系统下有效，Windows7系统会保留Flags和ForceFlags属性。此外，如果运行中的进程附加到调试器中，也不会出现上述特征。</p>
+<h4 id="NtGlobalFlag-0x68"><a href="#NtGlobalFlag-0x68" class="headerlink" title="NtGlobalFlag(+0x68)"></a>NtGlobalFlag(+0x68)</h4><p>调试进程时，PEB.NtGlobalFlag成员(+0x68)的值会被设置成0x70，所以，检测该成员的值就可以判断进程是否处于被调试状态</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20220325173410.png"></p>
+<p>NtGlobalFlag的0x70是下列Flags值进行bit OR(位或)运算的结果</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">FLG_HEAP_ENABLE_TAIL_CHECK</span> 		<span class="token punctuation">(</span><span class="token number">0x10</span><span class="token punctuation">)</span>
+<span class="token function">FLG_HEAP_ENABLE_FREE_CHECK</span> 		<span class="token punctuation">(</span><span class="token number">0x20</span><span class="token punctuation">)</span>
+<span class="token function">FLG_HEAP_VALIDATE_PARAMETERS</span>	<span class="token punctuation">(</span><span class="token number">0x40</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="破解之法-3"><a href="#破解之法-3" class="headerlink" title="破解之法"></a>破解之法</h5><p>将PEB.NtGlobalFlag值改为0即可</p>
+<h3 id="NtQueryInformationProcess"><a href="#NtQueryInformationProcess" class="headerlink" title="NtQueryInformationProcess()"></a>NtQueryInformationProcess()</h3><p>利用这个API可以探测调试器，获取各种与进程调试相关的信息。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">__kernel_entry NTSTATUS <span class="token function">NtQueryInformationProcess</span><span class="token punctuation">(</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span>            HANDLE           ProcessHandle<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span>            PROCESSINFOCLASS ProcessInformationClass<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>out<span class="token punctuation">]</span>           PVOID            ProcessInformation<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span>            ULONG            ProcessInformationLength<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>out<span class="token punctuation">,</span> optional<span class="token punctuation">]</span> PULONG           ReturnLength
+<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>我们给NtQueryInformationProcess的第二个二参数ProcessInformationClass ProcessInformationClass指定特定值并调用该函数，相关的信息就会被设置到第三个参数ProcessInformation中</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">ProcessBasicInformation             <span class="token operator">=</span> <span class="token number">0x00</span><span class="token punctuation">,</span>
+   ProcessQuotaLimits              <span class="token operator">=</span> <span class="token number">0x01</span><span class="token punctuation">,</span>
+   ProcessIoCounters               <span class="token operator">=</span> <span class="token number">0x02</span><span class="token punctuation">,</span>
+   ProcessVmCounters               <span class="token operator">=</span> <span class="token number">0x03</span><span class="token punctuation">,</span>
+   ProcessTimes                <span class="token operator">=</span> <span class="token number">0x04</span><span class="token punctuation">,</span>
+   ProcessBasePriority             <span class="token operator">=</span> <span class="token number">0x05</span><span class="token punctuation">,</span>
+   ProcessRaisePriority            <span class="token operator">=</span> <span class="token number">0x06</span><span class="token punctuation">,</span>
+   ProcessDebugPort                <span class="token operator">=</span> <span class="token number">0x07</span><span class="token punctuation">,</span>
+   ProcessExceptionPort            <span class="token operator">=</span> <span class="token number">0x08</span><span class="token punctuation">,</span>
+   ProcessAccessToken              <span class="token operator">=</span> <span class="token number">0x09</span><span class="token punctuation">,</span>
+   ProcessLdtInformation               <span class="token operator">=</span> <span class="token number">0x0A</span><span class="token punctuation">,</span>
+   ProcessLdtSize                  <span class="token operator">=</span> <span class="token number">0x0B</span><span class="token punctuation">,</span>
+   ProcessDefaultHardErrorMode         <span class="token operator">=</span> <span class="token number">0x0C</span><span class="token punctuation">,</span>
+   ProcessIoPortHandlers               <span class="token operator">=</span> <span class="token number">0x0D</span><span class="token punctuation">,</span>
+   ProcessPooledUsageAndLimits         <span class="token operator">=</span> <span class="token number">0x0E</span><span class="token punctuation">,</span>
+   ProcessWorkingSetWatch              <span class="token operator">=</span> <span class="token number">0x0F</span><span class="token punctuation">,</span>
+   ProcessUserModeIOPL             <span class="token operator">=</span> <span class="token number">0x10</span><span class="token punctuation">,</span>
+   ProcessEnableAlignmentFaultFixup        <span class="token operator">=</span> <span class="token number">0x11</span><span class="token punctuation">,</span>
+   ProcessPriorityClass            <span class="token operator">=</span> <span class="token number">0x12</span><span class="token punctuation">,</span>
+   ProcessWx86Information              <span class="token operator">=</span> <span class="token number">0x13</span><span class="token punctuation">,</span>
+   ProcessHandleCount              <span class="token operator">=</span> <span class="token number">0x14</span><span class="token punctuation">,</span>
+   ProcessAffinityMask             <span class="token operator">=</span> <span class="token number">0x15</span><span class="token punctuation">,</span>
+   ProcessPriorityBoost            <span class="token operator">=</span> <span class="token number">0x16</span><span class="token punctuation">,</span>
+   ProcessDeviceMap                <span class="token operator">=</span> <span class="token number">0x17</span><span class="token punctuation">,</span>
+   ProcessSessionInformation           <span class="token operator">=</span> <span class="token number">0x18</span><span class="token punctuation">,</span>
+   ProcessForegroundInformation        <span class="token operator">=</span> <span class="token number">0x19</span><span class="token punctuation">,</span>
+   ProcessWow64Information             <span class="token operator">=</span> <span class="token number">0x1A</span><span class="token punctuation">,</span>
+   ProcessImageFileName            <span class="token operator">=</span> <span class="token number">0x1B</span><span class="token punctuation">,</span>
+   ProcessLUIDDeviceMapsEnabled        <span class="token operator">=</span> <span class="token number">0x1C</span><span class="token punctuation">,</span>
+   ProcessBreakOnTermination           <span class="token operator">=</span> <span class="token number">0x1D</span><span class="token punctuation">,</span>
+   ProcessDebugObjectHandle            <span class="token operator">=</span> <span class="token number">0x1E</span><span class="token punctuation">,</span>
+   ProcessDebugFlags               <span class="token operator">=</span> <span class="token number">0x1F</span><span class="token punctuation">,</span>
+   ProcessHandleTracing            <span class="token operator">=</span> <span class="token number">0x20</span><span class="token punctuation">,</span>
+   ProcessIoPriority               <span class="token operator">=</span> <span class="token number">0x21</span><span class="token punctuation">,</span>
+   ProcessExecuteFlags             <span class="token operator">=</span> <span class="token number">0x22</span><span class="token punctuation">,</span>
+   ProcessResourceManagement           <span class="token operator">=</span> <span class="token number">0x23</span><span class="token punctuation">,</span>
+   ProcessCookie                   <span class="token operator">=</span> <span class="token number">0x24</span><span class="token punctuation">,</span>
+   ProcessImageInformation             <span class="token operator">=</span> <span class="token number">0x25</span><span class="token punctuation">,</span>
+   ProcessCycleTime                <span class="token operator">=</span> <span class="token number">0x26</span><span class="token punctuation">,</span>
+   ProcessPagePriority             <span class="token operator">=</span> <span class="token number">0x27</span><span class="token punctuation">,</span>
+   ProcessInstrumentationCallback          <span class="token operator">=</span> <span class="token number">0x28</span><span class="token punctuation">,</span>
+   ProcessThreadStackAllocation        <span class="token operator">=</span> <span class="token number">0x29</span><span class="token punctuation">,</span>
+   ProcessWorkingSetWatchEx            <span class="token operator">=</span> <span class="token number">0x2A</span><span class="token punctuation">,</span>
+   ProcessImageFileNameWin32           <span class="token operator">=</span> <span class="token number">0x2B</span><span class="token punctuation">,</span>
+   ProcessImageFileMapping             <span class="token operator">=</span> <span class="token number">0x2C</span><span class="token punctuation">,</span>
+   ProcessAffinityUpdateMode           <span class="token operator">=</span> <span class="token number">0x2D</span><span class="token punctuation">,</span>
+   ProcessMemoryAllocationMode         <span class="token operator">=</span> <span class="token number">0x2E</span><span class="token punctuation">,</span>
+   ProcessGroupInformation             <span class="token operator">=</span> <span class="token number">0x2F</span><span class="token punctuation">,</span>
+   ProcessTokenVirtualizationEnabled       <span class="token operator">=</span> <span class="token number">0x30</span><span class="token punctuation">,</span>
+   ProcessConsoleHostProcess           <span class="token operator">=</span> <span class="token number">0x31</span><span class="token punctuation">,</span>
+   ProcessWindowInformation            <span class="token operator">=</span> <span class="token number">0x32</span><span class="token punctuation">,</span>
+   ProcessHandleInformation            <span class="token operator">=</span> <span class="token number">0x33</span><span class="token punctuation">,</span>
+   ProcessMitigationPolicy             <span class="token operator">=</span> <span class="token number">0x34</span><span class="token punctuation">,</span>
+   ProcessDynamicFunctionTableInformation      <span class="token operator">=</span> <span class="token number">0x35</span><span class="token punctuation">,</span>
+   ProcessHandleCheckingMode           <span class="token operator">=</span> <span class="token number">0x36</span><span class="token punctuation">,</span>
+   ProcessKeepAliveCount               <span class="token operator">=</span> <span class="token number">0x37</span><span class="token punctuation">,</span>
+   ProcessRevokeFileHandles            <span class="token operator">=</span> <span class="token number">0x38</span><span class="token punctuation">,</span>
+   ProcessWorkingSetControl            <span class="token operator">=</span> <span class="token number">0x39</span><span class="token punctuation">,</span>
+   ProcessHandleTable              <span class="token operator">=</span> <span class="token number">0x3A</span><span class="token punctuation">,</span>
+   ProcessCheckStackExtentsMode        <span class="token operator">=</span> <span class="token number">0x3B</span><span class="token punctuation">,</span>
+   ProcessCommandLineInformation           <span class="token operator">=</span> <span class="token number">0x3C</span><span class="token punctuation">,</span>
+   ProcessProtectionInformation        <span class="token operator">=</span> <span class="token number">0x3D</span><span class="token punctuation">,</span>
+   ProcessMemoryExhaustion             <span class="token operator">=</span> <span class="token number">0x3E</span><span class="token punctuation">,</span>
+   ProcessFaultInformation             <span class="token operator">=</span> <span class="token number">0x3F</span><span class="token punctuation">,</span>
+   ProcessTelemetryIdInformation           <span class="token operator">=</span> <span class="token number">0x40</span><span class="token punctuation">,</span>
+   ProcessCommitReleaseInformation         <span class="token operator">=</span> <span class="token number">0x41</span><span class="token punctuation">,</span>
+   ProcessDefaultCpuSetsInformation        <span class="token operator">=</span> <span class="token number">0x42</span><span class="token punctuation">,</span>
+   ProcessAllowedCpuSetsInformation        <span class="token operator">=</span> <span class="token number">0x43</span><span class="token punctuation">,</span>
+   ProcessSubsystemProcess             <span class="token operator">=</span> <span class="token number">0x44</span><span class="token punctuation">,</span>
+   ProcessJobMemoryInformation         <span class="token operator">=</span> <span class="token number">0x45</span><span class="token punctuation">,</span>
+   ProcessInPrivate                <span class="token operator">=</span> <span class="token number">0x46</span><span class="token punctuation">,</span>
+   ProcessRaiseUMExceptionOnInvalidHandleClose <span class="token operator">=</span> <span class="token number">0x47</span><span class="token punctuation">,</span>
+   ProcessIumChallengeResponse         <span class="token operator">=</span> <span class="token number">0x48</span><span class="token punctuation">,</span>
+   ProcessChildProcessInformation          <span class="token operator">=</span> <span class="token number">0x49</span><span class="token punctuation">,</span>
+   ProcessHighGraphicsPriorityInformation      <span class="token operator">=</span> <span class="token number">0x4A</span><span class="token punctuation">,</span>
+   ProcessSubsystemInformation         <span class="token operator">=</span> <span class="token number">0x4B</span><span class="token punctuation">,</span>
+   ProcessEnergyValues             <span class="token operator">=</span> <span class="token number">0x4C</span><span class="token punctuation">,</span>
+   ProcessActivityThrottleState        <span class="token operator">=</span> <span class="token number">0x4D</span><span class="token punctuation">,</span>
+   ProcessActivityThrottlePolicy           <span class="token operator">=</span> <span class="token number">0x4E</span><span class="token punctuation">,</span>
+   ProcessWin32kSyscallFilterInformation       <span class="token operator">=</span> <span class="token number">0x4F</span><span class="token punctuation">,</span>
+   ProcessDisableSystemAllowedCpuSets      <span class="token operator">=</span> <span class="token number">0x50</span><span class="token punctuation">,</span>
+   ProcessWakeInformation              <span class="token operator">=</span> <span class="token number">0x51</span><span class="token punctuation">,</span>
+   ProcessEnergyTrackingState          <span class="token operator">=</span> <span class="token number">0x52</span><span class="token punctuation">,</span>
+   ProcessManageWritesToExecutableMemory       <span class="token operator">=</span> <span class="token number">0x53</span><span class="token punctuation">,</span>
+   ProcessCaptureTrustletLiveDump          <span class="token operator">=</span> <span class="token number">0x54</span><span class="token punctuation">,</span>
+   ProcessTelemetryCoverage            <span class="token operator">=</span> <span class="token number">0x55</span><span class="token punctuation">,</span>
+   ProcessEnclaveInformation           <span class="token operator">=</span> <span class="token number">0x56</span><span class="token punctuation">,</span>
+   ProcessEnableReadWriteVmLogging         <span class="token operator">=</span> <span class="token number">0x57</span><span class="token punctuation">,</span>
+   ProcessUptimeInformation            <span class="token operator">=</span> <span class="token number">0x58</span><span class="token punctuation">,</span>
+   ProcessImageSection             <span class="token operator">=</span> <span class="token number">0x59</span><span class="token punctuation">,</span>
+   ProcessDebugAuthInformation         <span class="token operator">=</span> <span class="token number">0x5A</span><span class="token punctuation">,</span>
+   ProcessSystemResourceManagement         <span class="token operator">=</span> <span class="token number">0x5B</span><span class="token punctuation">,</span>
+   ProcessSequenceNumber               <span class="token operator">=</span> <span class="token number">0x5C</span><span class="token punctuation">,</span>
+   ProcessLoaderDetour             <span class="token operator">=</span> <span class="token number">0x5D</span><span class="token punctuation">,</span>
+   ProcessSecurityDomainInformation        <span class="token operator">=</span> <span class="token number">0x5E</span><span class="token punctuation">,</span>
+   ProcessCombineSecurityDomainsInformation    <span class="token operator">=</span> <span class="token number">0x5F</span><span class="token punctuation">,</span>
+   ProcessEnableLogging            <span class="token operator">=</span> <span class="token number">0x60</span><span class="token punctuation">,</span>
+   ProcessLeapSecondInformation        <span class="token operator">=</span> <span class="token number">0x61</span><span class="token punctuation">,</span>
+   ProcessFiberShadowStackAllocation       <span class="token operator">=</span> <span class="token number">0x62</span><span class="token punctuation">,</span>
+   ProcessFreeFiberShadowStackAllocation       <span class="token operator">=</span> <span class="token number">0x63</span><span class="token punctuation">,</span>
+   MaxProcessInfoClass             <span class="token operator">=</span> <span class="token number">0x64</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>以上与调试器探测有关的成员是ProcessDebugPort(0x7),ProcessDebugObjectHandle(0x1E),ProcessDebugFlags(0x1F)。</p>
+<h4 id="ProcessDebugPort（0x7）"><a href="#ProcessDebugPort（0x7）" class="headerlink" title="ProcessDebugPort（0x7）"></a>ProcessDebugPort（0x7）</h4><p>进程处于调试状态时，系统会为它分配一个调试端口。ProcessInformation的参数值设置为ProcessDebugPort，调用NtQueryInformationProcess函数就能获取调试端口。如果进程处于非调试状态，则变量dwDebugPort的值设置成0，如果进程处于调试状态，则变量dwDebugPort的值设置成0xFFFFFFFF</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">DWORD dwDebugPort<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token function">pNtQueryInformationProcess</span><span class="token punctuation">(</span><span class="token function">GetCurrentProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>ProcessDebugPort<span class="token punctuation">,</span><span class="token operator">&amp;</span>dwDebugPort<span class="token punctuation">,</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>dwDebugPort<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"NtQueryInformationProcess(ProcessDebugPort)=0x%X\n"</span><span class="token punctuation">,</span>dwDebugPort<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>dwDebugPort<span class="token operator">!=</span><span class="token number">0x0</span><span class="token punctuation">)</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"==>Debugging!!\n\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">else</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"==>Not Debugging\n\n"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="ProcessDebugObjectHandle-0x1E"><a href="#ProcessDebugObjectHandle-0x1E" class="headerlink" title="ProcessDebugObjectHandle(0x1E)"></a>ProcessDebugObjectHandle(0x1E)</h4><p>调试进程时会生成调试对象(Debug Object)。函数的第二个参数值为ProcessDebugObjectHandle时，调用函数后通过第三个参数就能获取调试对象句柄。进程处于调试状态时，调试对象句柄的值就存在；若进程处于非调试状态，则调试对象句柄值为NULL。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">HANDLE hDebugObject<span class="token operator">=</span><span class="token constant">NULL</span><span class="token punctuation">;</span>
+<span class="token function">pNtQueryInformationProcess</span><span class="token punctuation">(</span><span class="token function">GetCurrentProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>ProcessDebugObjectHandle<span class="token punctuation">,</span><span class="token operator">&amp;</span>hDebugObject<span class="token punctuation">,</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>hDebugObject<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"NtQueryInformationProcess(ProcessDebugObjectHandle)=0x%X\n"</span><span class="token punctuation">,</span>hDebugObject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>hDebugObject<span class="token operator">!=</span><span class="token number">0x0</span><span class="token punctuation">)</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"==>Debugging!!\n\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">else</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"==>Not Debugging\n\n"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="ProcessDebugFlags-0x1F"><a href="#ProcessDebugFlags-0x1F" class="headerlink" title="ProcessDebugFlags(0x1F)"></a>ProcessDebugFlags(0x1F)</h4><p>检测DebugFlags的值也可以判断进程是否处于被调试状态。函数的第二个参数设置为ProcessDebugFlags，调用函数后通过第三个参数即可获取调试标志的值，如果为0，则进程处于被调试状态；若为1，则进程处于非调试状态。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">BOOL bDebugFlags<span class="token operator">=</span>TRUE<span class="token punctuation">;</span>
+<span class="token function">pNtQueryInformationProcess</span><span class="token punctuation">(</span><span class="token function">GetCurrentProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>ProcessDebugFlags<span class="token punctuation">,</span><span class="token operator">&amp;</span>bDebugFlags<span class="token punctuation">,</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>bDebugFlags<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"NtQueryInformationProcess(ProcessDebugFlags)=0x%X\n"</span><span class="token punctuation">,</span>bDebugFlags<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>bDebugFlags<span class="token operator">==</span><span class="token number">0x0</span><span class="token punctuation">)</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"==>Debugging!!\n\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">else</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"==>Not Debugging\n\n"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="NtQuerySystemInformation"><a href="#NtQuerySystemInformation" class="headerlink" title="NtQuerySystemInformation()"></a>NtQuerySystemInformation()</h3><p>介绍一种基于调试环境检测的反调试技术，运用这种反调试技术可以检测当前OS是否在调试模式下运行。</p>
+<p>NtQuerySystemInformation是一个系统函数，可以用来获取当前运行的多种OS信息。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">__kernel_entry NTSTATUS <span class="token function">NtQuerySystemInformation</span><span class="token punctuation">(</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span>            SYSTEM_INFORMATION_CLASS SystemInformationClass<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">,</span> out<span class="token punctuation">]</span>       PVOID                    SystemInformation<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span>            ULONG                    SystemInformationLength<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>out<span class="token punctuation">,</span> optional<span class="token punctuation">]</span> PULONG                   ReturnLength
+<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>SYSTEM_INFORMATION_CLASS SystemInformationClass是一个枚举类型，传入需要的系统信息类型，将某结构体的地址传给SystemInformation，API被调用后，该结构体中就会填充相关的信息</p>
+<p>SYSTEM_INFORMATION_CLASS的枚举类型</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">enum</span> <span class="token class-name">_SYSTEM_INFORMATION_CALSS</span><span class="token punctuation">&#123;</span>
+	SystemBasicInformation<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>
+	SystemPerformanceInformation<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span>
+	SystemProcessInformation<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">,</span>
+	SystemProcessorPerformanceInformation<span class="token operator">=</span><span class="token number">8</span><span class="token punctuation">,</span>
+	SystemInterruptInformation<span class="token operator">=</span><span class="token number">23</span><span class="token punctuation">,</span>
+	SystemExceptionInformation<span class="token operator">=</span><span class="token number">33</span><span class="token punctuation">,</span>
+	SystemKernelDebuggerInformation<span class="token operator">=</span><span class="token number">35</span><span class="token punctuation">,</span>
+	SystemRegistryQuotaInformation<span class="token operator">=</span><span class="token number">37</span><span class="token punctuation">,</span>
+	SystemLookasideInformation<span class="token operator">=</span><span class="token number">45</span>
+<span class="token punctuation">&#125;</span>SYSTEM_INFORMATION_CALSS<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="SystemKernelDebuggerInformation-0x23"><a href="#SystemKernelDebuggerInformation-0x23" class="headerlink" title="SystemKernelDebuggerInformation(0x23)"></a><strong>SystemKernelDebuggerInformation</strong>(0x23)</h4><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">MyNtQuerySystemInformation</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">typedef</span> <span class="token function">NTSTATUS</span> <span class="token punctuation">(</span>WINAPI <span class="token operator">*</span>NTQUERYSYSTEMINFORMATION<span class="token punctuation">)</span><span class="token punctuation">(</span>
+        ULONG SystemInformationClass<span class="token punctuation">,</span>
+        PVOID SystemInformation<span class="token punctuation">,</span>
+        ULONG SystemInformationLength<span class="token punctuation">,</span>
+        PULONG ReturnLength
+    <span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//函数没有导出，需要我们自己导出</span>
+
+    <span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_SYSTEM_KERNEL_DEBUGGER_INFORMATION</span> 
+    <span class="token punctuation">&#123;</span>
+        BOOLEAN DebuggerEnabled<span class="token punctuation">;</span>
+        BOOLEAN DebuggerNotPresent<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> SYSTEM_KERNEL_DEBUGGER_INFORMATION<span class="token punctuation">,</span> <span class="token operator">*</span>PSYSTEM_KERNEL_DEBUGGER_INFORMATION<span class="token punctuation">;</span><span class="token comment">//第二个参数结构体</span>
+
+    NTQUERYSYSTEMINFORMATION NtQuerySystemInformation<span class="token punctuation">;</span><span class="token comment">//函数指针</span>
+  
+    NtQuerySystemInformation <span class="token operator">=</span> <span class="token punctuation">(</span>NTQUERYSYSTEMINFORMATION<span class="token punctuation">)</span>  
+                                <span class="token function">GetProcAddress</span><span class="token punctuation">(</span><span class="token function">GetModuleHandle</span><span class="token punctuation">(</span>L<span class="token string">"ntdll"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+                                               <span class="token string">"NtQuerySystemInformation"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//获取NtQuerySystemInformation的地址</span>
+
+    ULONG SystemKernelDebuggerInformation <span class="token operator">=</span> <span class="token number">0x23</span><span class="token punctuation">;</span>
+    ULONG ulReturnedLength <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    SYSTEM_KERNEL_DEBUGGER_INFORMATION DebuggerInfo <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+    <span class="token function">NtQuerySystemInformation</span><span class="token punctuation">(</span>SystemKernelDebuggerInformation<span class="token punctuation">,</span> <span class="token comment">//调用NtQuerySystemInformation，参数是SystemKernelDebuggerInformation</span>
+                             <span class="token punctuation">(</span>PVOID<span class="token punctuation">)</span> <span class="token operator">&amp;</span>DebuggerInfo<span class="token punctuation">,</span> 		  <span class="token comment">//和DebuggerInfo</span>
+                             <span class="token keyword">sizeof</span><span class="token punctuation">(</span>DebuggerInfo<span class="token punctuation">)</span><span class="token punctuation">,</span>      <span class="token comment">// 2 bytes</span>
+                             <span class="token operator">&amp;</span>ulReturnedLength<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"NtQuerySystemInformation(SystemKernelDebuggerInformation) = 0x%X 0x%X\n"</span><span class="token punctuation">,</span> 
+           DebuggerInfo<span class="token punctuation">.</span>DebuggerEnabled<span class="token punctuation">,</span> DebuggerInfo<span class="token punctuation">.</span>DebuggerNotPresent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span> DebuggerInfo<span class="token punctuation">.</span>DebuggerEnabled <span class="token punctuation">)</span>  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"  => Debugging!!!\n\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//根据DebuggerEnabled判断是否存在调试</span>
+    <span class="token keyword">else</span>                                <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"  => Not debugging...\n\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在调用NtQuerySystemInformation时，第一个参数是SystemKernelDebuggerInformation，第二个参数是和DebuggerInfo，当函数调用结束后，如果系统处于调试模式下，则DebuggerInfo中的成员DebuggerEnabled将会被设置成为1(DebuggerNotPresent恒为1)。</p>
+<h3 id="NtQueryObject"><a href="#NtQueryObject" class="headerlink" title="NtQueryObject()"></a>NtQueryObject()</h3><p>系统中的某个调试器调试进程时，会创建一个调试对象类型的内核对象，检测该对象是否存在就可以判断是否有进程正在被调试。</p>
+<p>NtQueryObject是用来获取系统各种内核对象的信息</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">__kernel_entry NTSYSCALLAPI NTSTATUS <span class="token function">NtQueryObject</span><span class="token punctuation">(</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">,</span> optional<span class="token punctuation">]</span>  HANDLE                   Handle<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span>            OBJECT_INFORMATION_CLASS ObjectInformationClass<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>out<span class="token punctuation">,</span> optional<span class="token punctuation">]</span> PVOID                    ObjectInformation<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span>            ULONG                    ObjectInformationLength<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>out<span class="token punctuation">,</span> optional<span class="token punctuation">]</span> PULONG                   ReturnLength
+<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>调用NtQueryObject先向OBJECT_INFORMATION_CLASS ObjectInformationClass赋值，然后调用后查询到的内核对象信息就会保存在ObjectInformation中</p>
+<p>OBJECT_INFORMATION_CLASS 和之前一样是一个枚举类型</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">enum</span> <span class="token class-name">_OBJECT_INFORMATION_CLASS</span><span class="token punctuation">&#123;</span>
+	ObjectBasicInformation<span class="token punctuation">,</span>
+	ObjectNameInformation<span class="token punctuation">,</span>
+	ObjectTypeInformation<span class="token punctuation">,</span>
+	ObjectAllTypesInformation<span class="token punctuation">,</span>
+	ObjectHandleInformation
+<span class="token punctuation">&#125;</span>OBJECT_INFORMATION_CLASS<span class="token punctuation">,</span><span class="token operator">*</span>POBJECT_INFORMATION_CLASS<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>首先使用ObjectAllTypesInformation值获取系统所有对象信息，然后从中检测是否存在调试对象。</p>
+<h4 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h4><h5 id="1、获取内核对象信息链表大小"><a href="#1、获取内核对象信息链表大小" class="headerlink" title="1、获取内核对象信息链表大小"></a>1、获取内核对象信息链表大小</h5><pre class="line-numbers language-c" data-language="c"><code class="language-c">ULONG lsize<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token function">pNtQueryObject</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span>ObjectAllTypesInformation<span class="token punctuation">,</span><span class="token operator">&amp;</span>lsize<span class="token punctuation">,</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>ObjectAllTypesInformation<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">&amp;</span>lsize<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h5 id="2、分配内存"><a href="#2、分配内存" class="headerlink" title="2、分配内存"></a>2、分配内存</h5><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token operator">*</span>pBuf
+pBuf<span class="token operator">=</span><span class="token function">VirtualAlloc</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span>lsize<span class="token punctuation">,</span>MEM_RESERVE<span class="token operator">|</span>MEM_COMMIT<span class="token punctuation">,</span>PAGE_READWRITE<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h5 id="获取内核对象信息链表"><a href="#获取内核对象信息链表" class="headerlink" title="获取内核对象信息链表"></a>获取内核对象信息链表</h5><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_OBJECT_TYPE_INFORMATION</span> <span class="token punctuation">&#123;</span>
+     UNICODE_STRING TypeName<span class="token punctuation">;</span>  <span class="token comment">//内核对象类型的名称，比如互斥体，事件等等                     </span>
+    ULONG TotalNumberOfObjects<span class="token punctuation">;</span><span class="token comment">//对象的数量</span>
+    ULONG TotalNumberOfHandles<span class="token punctuation">;</span>
+    ULONG TotalPagedPoolUsage<span class="token punctuation">;</span>
+    ULONG TotalNonPagedPoolUsage<span class="token punctuation">;</span>
+    ULONG TotalNamePoolUsage<span class="token punctuation">;</span>
+    ULONG TotalHandleTableUsage<span class="token punctuation">;</span>
+    ULONG HighWaterNumberOfObjects<span class="token punctuation">;</span>
+    ULONG HighWaterNumberOfHandles<span class="token punctuation">;</span>
+    ULONG HighWaterPagedPoolUsage<span class="token punctuation">;</span>
+    ULONG HighWaterNonPagedPoolUsage<span class="token punctuation">;</span>
+    ULONG HighWaterNamePoolUsage<span class="token punctuation">;</span>
+    ULONG HighWaterHandleTableUsage<span class="token punctuation">;</span>
+    ULONG InvalidAttributes<span class="token punctuation">;</span>
+    GENERIC_MAPPING GenericMapping<span class="token punctuation">;</span>
+    ULONG ValidAccessMask<span class="token punctuation">;</span>
+    BOOLEAN SecurityRequired<span class="token punctuation">;</span>
+    BOOLEAN MaintainHandleCount<span class="token punctuation">;</span>
+    ULONG PoolType<span class="token punctuation">;</span>
+    ULONG DefaultPagedPoolCharge<span class="token punctuation">;</span>
+    ULONG DefaultNonPagedPoolCharge<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>OBJECT_TYPE_INFORMATION<span class="token punctuation">,</span> <span class="token operator">*</span>POBJECT_TYPE_INFORMATION<span class="token punctuation">;</span>
+	
+<span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_OBJECT_ALL_INFORMATION</span> <span class="token punctuation">&#123;</span>
+ULONG                   NumberOfObjectsTypes<span class="token punctuation">;</span>
+OBJECT_TYPE_INFORMATION ObjectTypeInformation<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span> OBJECT_ALL_INFORMATION<span class="token punctuation">,</span> <span class="token operator">*</span>POBJECT_ALL_INFORMATION<span class="token punctuation">;</span>
+
+<span class="token function">pNtQueryObject</span><span class="token punctuation">(</span><span class="token punctuation">(</span>HANDLE<span class="token punctuation">)</span><span class="token number">0xFFFFFFFF</span><span class="token punctuation">,</span>ObjectAllTypesInformation，pBuf<span class="token punctuation">,</span>lsize<span class="token punctuation">,</span><span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+POBJECT_ALL_INFORMATION pObjectAllInfo<span class="token operator">=</span><span class="token punctuation">(</span>POBJECT_ALL_INFORMATION<span class="token punctuation">)</span>pBuf<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>调用NtQueryObject后，系统中所有的对象的信息代码以OBJECT_ALL_INFORMATION结构的形式存入了pBuf中，然后将pBuf强转成POBJECT_ALL_INFORMATION，OBJECT_ALL_INFORMATION是由OBJECT_TYPE_INFORMATION结构体数组构成，实际的内核对象类型信息就被存入了OBJECT_TYPE_INFORMATION结构体数组中，通过循环遍历就可以查找是否存在调试对象。</p>
+<h4 id="破解之法-4"><a href="#破解之法-4" class="headerlink" title="破解之法"></a>破解之法</h4><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20220325214132.png"></p>
+<p>我们在调用call esi也就是call ZwQueryObject之前观察堆栈，发现第二个参数是ObjectAllTypesInformation(3)，我们将这个值修改成0在执行，这样子就无法读取内核对象了，当然我们也可以直接钩取ZwQueryObject()API。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20220325214358.png"></p>
+<h3 id="ZwSetInformationThread"><a href="#ZwSetInformationThread" class="headerlink" title="ZwSetInformationThread()"></a>ZwSetInformationThread()</h3><p>利用ZwSetInformationThread()API，被调试者可以将自身从调试器中分离出来。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">NTSYSAPI NTSTATUS <span class="token function">ZwSetInformationThread</span><span class="token punctuation">(</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span> HANDLE          ThreadHandle<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span> THREADINFOCLASS ThreadInformationClass<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span> PVOID           ThreadInformation<span class="token punctuation">,</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span> ULONG           ThreadInformationLength
+<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>ZwSetInformationThread是来为线程设置信息的。该函数拥有两个参数，第一个ThreadHandle用来接收当前线程的句柄，第二个参数ThreadInformationClass表示线程信息类型，若其值设置为ThreadHideFromDebugger(0x11)，则调用该函数后，调试进程就会被分离出来。ZwSetInformationThread不会对正常运行的程序产生任何影响，但是运行的是调试器程序，调用该API就会使调试器终止运行，同时终止自身进程。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220327174901.png"></p>
+<p>当我们继续执行并调用ZwSetInformationThread时候，就会分离出被调试进程并终止运行</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220327175342.png"></p>
+<h4 id="破解之法-5"><a href="#破解之法-5" class="headerlink" title="破解之法"></a>破解之法</h4><p>简单的破解思路就是在调用4001027地址的ZwSetInformationThread前，查找存储在栈中的第二个参数，如果它的值为ThreadHideFromDebugger(0x11)，就修改成0继续运行。</p>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>ZwSetInformationThread是将线程隐藏起来，调试器就接受不到信息，从而无法调试。另外，Windows XP以后新增了DebugActiveProcessStop()API也可以用来分离调试器与被调试进程，从而停止调试。</p>
+<h3 id="TLS回调函数"><a href="#TLS回调函数" class="headerlink" title="TLS回调函数"></a>TLS回调函数</h3><p>TLS回调函数是反调试技术中最常用的函数，但我们并不能将TLS回调本身看作一种反调试技术，其回调函数的执行会先于EP代码，所以我们可以在回调函数中加一些骚操作。TLS在前面已经讲过了，这里就不再多描述。</p>
+<h3 id="ETC"><a href="#ETC" class="headerlink" title="ETC"></a>ETC</h3><p>首先，我们必须明白应用反调试技术的目的在于防止程序遭受逆向分析。不必非得为此费力判断自身进程是否处于调试状态。还有一种比较简单的方法就是判断当前的系统是否为逆向分析专用系统，如果是则停止程序。这样又出现了各种各样的反调试技术，这些技术都能从系统中轻松获取各种信息(进程、文件、窗口、注册表、主机名、计算机名、用户名、环境变量等)</p>
+<h4 id="常用的几种反调试技术"><a href="#常用的几种反调试技术" class="headerlink" title="常用的几种反调试技术"></a>常用的几种反调试技术</h4><p>这些技术都是借助Win32API获取系统信息来具体实现</p>
+<p>1、检测OllyDbg窗口(FindWindow)</p>
+<p>2、检测OllyDbg进程(CreateToolhelp32Snapshot)</p>
+<p>3、检测计算机名称是否为“TEST”、”ANALYSIS”等(GetComputerName)</p>
+<p>4、检测程序运行路径中是否存在“TEST”、”SAMPLE”等(GetCommandLine)</p>
+<p>5、检测虚拟机是否处于运行状态</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220327181044.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>除了这些静态反调试方法，还有很多方法，而且调试过程中还会遇到更多，这是积累经验、不断进步的必经之路。</p>
+<h2 id="动态反调试技术"><a href="#动态反调试技术" class="headerlink" title="动态反调试技术"></a>动态反调试技术</h2><p>如果在程序文件中应用了动态反调试技术，则很难再使用调试器中的跟踪技术，动态反调试技术会扰乱调试器的跟踪功能。</p>
+<h3 id="动态反调试技术的目的"><a href="#动态反调试技术的目的" class="headerlink" title="动态反调试技术的目的"></a>动态反调试技术的目的</h3><p>隐藏和保护程序代码与数据，使之无法进行逆向分析。PE保护器中一般会使用大量的动态反调试技术，以保护源程序的核心算法。在调试这些程序时，动态反调试技术就会干扰调试器，使之无法正常跟踪查找源程序的核心代码(OEP)。</p>
+<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p>异常常用于反调试技术中，正常运行的程序发生异常时，在SEH机制的作用下,OS就会接收异常，然后调用进程中注册的SEH处理，但是，如果被调试的进程在调试状态下发生异常，调试器就会接收处理。利用这个特征就可以判断进程是正常运行还是调试运行。</p>
+<h4 id="SEH"><a href="#SEH" class="headerlink" title="SEH"></a>SEH</h4><pre class="line-numbers language-none"><code class="language-none">EXCEPTION_ACCESS_VIOLATION    	    0xC0000005     程序企图读写一个不可访问的地址时引发的异常。例如企图读取0地址处的内存。
+EXCEPTION_ARRAY_BOUNDS_EXCEEDED     0xC000008C     数组访问越界时引发的异常。
+EXCEPTION_BREAKPOINT                0x80000003     触发断点时引发的异常。
+EXCEPTION_DATATYPE_MISALIGNMENT     0x80000002     程序读取一个未经对齐的数据时引发的异常。
+EXCEPTION_FLT_DENORMAL_OPERAND      0xC000008D     如果浮点数的操作数是非正常的，则引发该异常。所谓非正常即它的值太小以至于不能用标准格式表示出来。
+EXCEPTION_FLT_DIVIDE_BY_ZERO        0xC000008E     浮点数除法的除数是0时引发该异常。
+EXCEPTION_FLT_INEXACT_RESULT        0xC000008F     浮点数操作的结果不能精确表示成小数时引发该异常。
+EXCEPTION_FLT_INVALID_OPERATION     0xC0000090     该异常表示不包括在这个表内的其它浮点数异常。
+EXCEPTION_FLT_OVERFLOW              0xC0000091     浮点数的指数超过所能表示的最大值时引发该异常。
+EXCEPTION_FLT_STACK_CHECK           0xC0000092     进行浮点数运算时栈发生溢出或下溢时引发该异常。
+EXCEPTION_FLT_UNDERFLOW             0xC0000093     浮点数的指数小于所能表示的最小值时引发该异常。
+EXCEPTION_ILLEGAL_INSTRUCTION       0xC000001D     程序企图执行一个无效的指令时引发该异常。
+EXCEPTION_IN_PAGE_ERROR             0xC0000006     程序要访问的内存页不在物理内存中时引发的异常。
+EXCEPTION_INT_DIVIDE_BY_ZERO        0xC0000094     整数除法的除数是0时引发该异常。
+EXCEPTION_INT_OVERFLOW              0xC0000095     整数操作的结果溢出时引发该异常。
+EXCEPTION_INVALID_DISPOSITION       0xC0000026     异常处理器返回一个无效的处理的时引发该异常。
+EXCEPTION_NONCONTINUABLE_EXCEPTION  0xC0000025     发生一个不可继续执行的异常时，如果程序继续执行，则会引发该异常。
+EXCEPTION_PRIV_INSTRUCTION          0xC0000096     程序企图执行一条当前CPU模式不允许的指令时引发该异常。
+EXCEPTION_SINGLE_STEP               0x80000004     标志寄存器的TF位为1时，每执行一条指令就会引发该异常。主要用于单步调试。
+EXCEPTION_STACK_OVERFLOW            0xC00000FD     栈溢出时引发该异常<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p> Windows操作系统中最具代表性的异常时断点异常。BreakPoint指令触发异常时，若程序处于正常运行状态，则自动调用已经注册过的SEH；如果程序处于调试运行状态，则系统会立刻停止运行程序，将控制权转给调试器。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220327184136.png"></p>
+<p>这是基于int 3 异常的反调试代码</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220327184611.png"></p>
+<p>程序的执行流程</p>
+<h5 id="1、安装SEH"><a href="#1、安装SEH" class="headerlink" title="1、安装SEH"></a>1、安装SEH</h5><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">00401011</span> PUSH <span class="token number">40102</span>C
+<span class="token number">00401016</span> PUSH DWORD PTR FS<span class="token operator">:</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+<span class="token number">0040101</span>D MOV DWORD PTR FS<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>ESP<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220327184931.png"></p>
+<h5 id="2、触发INT-3-异常"><a href="#2、触发INT-3-异常" class="headerlink" title="2、触发INT 3 异常"></a>2、触发INT 3 异常</h5><pre class="line-numbers language-c" data-language="c"><code class="language-c">INT <span class="token number">3</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h5 id="3-1、调试运行—终止进程"><a href="#3-1、调试运行—终止进程" class="headerlink" title="3-1、调试运行—终止进程"></a>3-1、调试运行—终止进程</h5><p>如果进程处于调试运行状态，则由调试器处理异常。INT3指令是CPU中断指令，在用户模式的调试器中什么也不做，继续往下执行</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">00401025</span> MOV EAX<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">1</span>
+<span class="token number">0040102</span>A JMP EAX<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>跳转到FFFFFFFF，是一个非法地址，无法继续调试</p>
+<h5 id="3-2、正常运行—运行SEH"><a href="#3-2、正常运行—运行SEH" class="headerlink" title="3-2、正常运行—运行SEH"></a>3-2、正常运行—运行SEH</h5><pre class="line-numbers language-assembly" data-language="assembly"><code class="language-assembly">0040102C MOV EAX,DWORD PTR SS:[ESP+C]
+00401031 MOV EBX,401040
+00401036 MOV DWORD PTR DS:[EAX+B8],EBX
+0040103D XOR EAX,EAX
+0040103F RETN	<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>SS:[ESP+C]是SEH的第三个参数，是CONTEXT *pContext结构体指针，它是一个发生异常的线程CONTEXT结构体。DS:[EAX+B8]就是pContext-&gt;EIP，所以401036地址的MOV DWORD PTR DS:[EAX+B8],EBX是将该结构体的EIP修改为401040，然后异常处理器返回0。接下来发生异常的线程再次从修改后的EIP开始运行</p>
+<h5 id="删除SEH"><a href="#删除SEH" class="headerlink" title="删除SEH"></a>删除SEH</h5><pre class="line-numbers language-assembly" data-language="assembly"><code class="language-assembly">00401040 POP DWORD PTR FS:[0]
+00401047 ADD ESP,4<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h5 id="破解之法-6"><a href="#破解之法-6" class="headerlink" title="破解之法"></a>破解之法</h5><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220327190854.png"></p>
+<p>此时调试器就会忽略被调试进程中发生的INT3异常，而由自身的SEH处理</p>
+<h4 id="SetUnhandledExceptionFilter"><a href="#SetUnhandledExceptionFilter" class="headerlink" title="SetUnhandledExceptionFilter()"></a>SetUnhandledExceptionFilter()</h4><p>进程发异常时，如果SEH未处理或者注册的SEH根本不存在，会发生什么呢？这个时候就会调用执行系统的</p>
+<p>kernel32!SetUnhandledExceptionFilter()API,这个函数内部会运行系统的最后一个异常处理器，最后的异常处理器通常会弹出错误消息框，然后终止程序运行。</p>
+<p>kernel32!SetUnhandledExceptionFilter()内部调用了ntdll!NtQueryInformationProcess()API,以判断是否正在调试进程，如果进程正常执行，则运行系统最后的异常处理器；如果进程处于调试中，则将异常派送给调试器。我们可以通过kernel32!SetUnhandledExceptionFilter()修改系统最后的异常处理器</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">LPTOP_LEVEL_EXCEPTION_FILTER <span class="token function">SetUnhandledExceptionFilter</span><span class="token punctuation">(</span>
+  <span class="token punctuation">[</span>in<span class="token punctuation">]</span> LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter
+<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>调用该函数修改系统的最后异常处理器时，只要将新的Top Level Exception Filter函数地址传递给函数的lpTopLevelExceptionFilter参数就行了。</p>
+<h5 id="破解之法-7"><a href="#破解之法-7" class="headerlink" title="破解之法"></a>破解之法</h5><p>利用SetUnhandledExceptionFilter()API反调试的技术综合运用了静态和动态技术。。因此，破解时要先使SetUnhandledExceptionFilter()内部调用的ntdll!NtQueryInformationProcess()API失效，然后调用SetUnhandledExceptionFilter跟踪注册的Exception Filter，在正常运行时确定要跳到哪个位置即可</p>
+<h3 id="Timing-Check"><a href="#Timing-Check" class="headerlink" title="Timing Check"></a>Timing Check</h3><p>在调试器中逐行跟踪程序代码比程序正常运行耗费的时间多得多，Timing Check技术通过计算运行时间的差异来判断进程是否处于被调试状态。</p>
+<p>直接对时间信息进行操作或者对比较时间的语句进行修改就行了，但是在实际操作中，该反调试技术通常与其他反调试技术并用，导致破解过程变得非常困难。</p>
+<p>有时候Timing Check也会用在反模拟技术上，程序在模拟器中运行的速度要比正常运行慢很多。</p>
+<h4 id="时间间隔测量法"><a href="#时间间隔测量法" class="headerlink" title="时间间隔测量法"></a>时间间隔测量法</h4><pre class="line-numbers language-none"><code class="language-none">1.Counter based method
+RDTSC(Read Time Stamp Counter 读取时间戳计数器)
+kernel32！QueryPerformanceCounter()&#x2F;NtQueryPermanceCounter()
+kernel32!GetTickCount()
+
+2.Time based method
+timeGetTime()
+_ftime()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>测量时间间隔的方法大致分为两类，一类是利用CPU的计数器，另一类是利用系统的实际时间(TIME).</p>
+<p>提示：</p>
+<p>计数器的准确程度由高到低排列如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">RDSTC&gt;NtQueryPerformanceCounter()&gt;GetTickCount()<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>NtQueryPerformanceCounter和GetTickCount虽然使用相同硬件，但是二者的准确程度不同，而RDTSC是CPU内部计数器，其准确程度最高</p>
+<h4 id="RDTSC"><a href="#RDTSC" class="headerlink" title="RDTSC"></a>RDTSC</h4><p>x86CPU中存在一个名为TSC（Time Stamp Counter，时间戳计数器）的64位寄存器。CPU对每个Clock Cycle（时钟周期）计数，然后保存到TSC。</p>
+<p>RDTSC是一条汇编指令，用来将TSC值读入到EDX:EAX寄存器（TSC大小为64位，其高32位保存到EDX寄存器，低32位保存至EAX寄存器）</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220328161342.png"></p>
+<p>两次RDTSC指令存在一定的时间间隔，通过计算时间差(Delta)来判断进程是否处于调试状态。Delta不是固定值，一般在0xFFF-0XFFFFFFFF之间取</p>
+<p>在0x0040101C-0x0040102A之间的代码区域，只要执行一次F7或者F8，Count的值就会大于0xFFFFFFFF</p>
+<h5 id="破解之法-8"><a href="#破解之法-8" class="headerlink" title="破解之法"></a>破解之法</h5><p>1、不适用跟踪命令，直接在0x0040102C下断点，然后F9运行，虽然速度略慢于正常运行速度，但是比代码跟踪要快很多。</p>
+<p>2、操作第二个RDTSC，使之与第一个结果相同，这样就能顺利通过CMP语句</p>
+<p>3、操纵条件分支语句(CMP,JCC)</p>
+<p>在调试器中强制修改Flags的值，阻止执行跳转至0x40103E地址处。大部分的Jcc指令会受CF或ZF的影响，只要修改这些标志即可控制Jcc指令。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220328162610.png"></p>
+<p>4、利用内核模式驱动程序使RDTSC指令失效</p>
+<p>利用内核模式驱动程序可以从根本使基于RDTSC的动态反调试技术失效（其实，<code>Olly Advanced PlugIn</code>就采用了该方法）</p>
+<h3 id="陷阱标志"><a href="#陷阱标志" class="headerlink" title="陷阱标志"></a>陷阱标志</h3><h5 id="单步执行"><a href="#单步执行" class="headerlink" title="单步执行"></a>单步执行</h5><p>陷阱标志指<code>EFLAGS</code>寄存器的第九个（index 8）比特位<img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220328163355.png"></p>
+<p>TF设置成1时，CPU进入单步执行模式。单步执行模式中，CPU执行1条指令后就会触发1个EXCEPTION_SINGLE_STEP异常，然后陷阱标志位就会清零，这个异常可以与SEH相结合，在反调试技术中用于探测调试器。</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220328164229.png"></p>
+<p>如果程序正常运行，则运行注册的SEH，如果时调试运行，就继续执行下面的NOP MOV EAX,-1 JMP EAX</p>
+<p>JMP EAX&#x3D;JMP 0xFFFFFFFF肯定会报错，导致程序崩溃</p>
+<p>由于EFLAGS不能直接修改，所以我们通过PUSHFD&#x2F;POPFD与OR运输修改TF位的值</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220328164759.png"></p>
+<p>此时EFLAGS也被恢复成202了</p>
+<h6 id="破解之法-9"><a href="#破解之法-9" class="headerlink" title="破解之法"></a>破解之法</h6><p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220328164951.png"></p>
+<p>让被调试者直接处理EXCEPTION_SINGLE_STEP异常</p>
+<h5 id="INT-2D"><a href="#INT-2D" class="headerlink" title="INT 2D"></a>INT 2D</h5><p>INT 2D 原为内核模式中用来触发断点异常的指令，也可以在用户模式下触发异常。但程序调试运行时不会触发异常，只是忽略。</p>
+<p>1、忽略下条指令的第一个字节</p>
+<p>在调试模式中执行完 INT 2D指令后，下条指令的第一个字节将被忽略，后一个字节会被识别为新的指令继续执行</p>
+<p>2、一直运行到断点处</p>
+<p>INT 2D 指令的另一特征，使用StepInto（F7）或StepOver（F8）命令跟踪INT 2D指令时，程序不会停在其下条指令的地方，而是一直运行，直到遇到断点，就像使用RUN(F9)命令运行程序一样。</p>
+<h6 id="破解之法-10"><a href="#破解之法-10" class="headerlink" title="破解之法"></a>破解之法</h6><p>有时候我们会跟踪SEH逐行调试代码，这时候我们需要一种方法可以使程序执行到SEH</p>
+<p>首先。使OD中忽视EXCEPTION_SINGLE_STEP异常，然后运行40101E地址处，并且在SEH处下一个断点，否则这里面直接秒执行完</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220328171724.png"></p>
+<p>现在我们修改TF位或者修改EFLAGS(+0x100)</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220328171820.png"></p>
+<p>此时按照之前的实验，我们只要执行一步，就会触发异常，进入SEH，但是我们F8之后并没有进行跳转,TF也没有清零</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220328171933.png"></p>
+<p>这是因为INT 2D是内核指令，在用户模式调试器中不会被识别为正常指令。因此我们再执行一次NOP，跳转到SEH</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220328172110.png"></p>
+<p>可能有人会好奇为什么INT 2D后面的第一个字节NOP没有被忽略，这是因为被忽略的情况只发生在TF为0的情况下，当TF为1时，其后面的第一个字节不会被忽略。</p>
+<h3 id="0xCC-探测"><a href="#0xCC-探测" class="headerlink" title="0xCC 探测"></a>0xCC 探测</h3><p>程序调试过程中，我们一般 会设置许多软件断点，断点对应的x86指令为0xCC，如果能检测到该指令，即可以判断程序是否处于调试状态。但是0xCC可以用作操作码、移位码、立即数、数据、地址等，所以仅仅扫描内存中的代码区域并不可靠。</p>
+<h4 id="API断点"><a href="#API断点" class="headerlink" title="API断点"></a>API断点</h4><p>若只调试程序中的某个局部功能，一个比较快的方法是先在程序要调试的API处设置断点，再运行程序。运行暂停在相应断点后，再查看存储在栈中的返回地址。</p>
+<p>“跟踪返回地址调试相应部分”的方式能够大幅缩小代码调试范围。反调试技术中，探测这些位置在API上的断点就能准确判断当前进程是否处于调试状态。一般而言，断点都是设置在API代码的开始部分，所以，只需要检测API代码的第一个字节是否是0xCC即可判断出当前进程是否处于调试之中</p>
+<h5 id="代码逆向人员常用API列表："><a href="#代码逆向人员常用API列表：" class="headerlink" title="代码逆向人员常用API列表："></a>代码逆向人员常用API列表：</h5><pre class="line-numbers language-none"><code class="language-none">进程
+CreatProcess				CreateProcessAsUser     	CreateRemoteThread
+CreatThread					GetThreadContext			SetThreadContext
+EnumProcesses				EnumProcessModules			OpenProcess
+CreateToolhelp32Snapshot	Process32First				Process32Next
+ShellExecuteA				WinExec						TerminateProcess<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">内存
+ReadProcessMemory			WriteProcessMemory			VirtualAlloc
+VirtualAllocEx				VirtualProtect				VirtualProtectEx
+VirtualQuery				VirtualQueryEx<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">文件
+CreateFile					ReadFile					WriteFile
+CopyFile					CreateDirectory				DeleteFile
+MoveFile					MoveFileEx					FindFirstFile
+FindNextFile				GetFileSize					GetWindowsDirectory
+GetSystemDirectory			GetFileAttributes			SetFileAttributes
+SetFilePointer				CreateFileMapping			MapViewOfFile
+MapViewOfFileEx				UnmapViewOfFile				_open
+_write						_read						_lseek
+_tell<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">寄存器
+RegCreateKeyEx				RegDeleteKey				RegDeleteValue
+RegEnumKeyEx				RegQueryValueEx				RegSetValue
+RegSetValueEx<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">网络
+WSAStartup					socket						inet_addr
+closesocket					getservbyname				gethostbybname
+htons						connect						inet_htoa
+recv						send						HttpOpenRequest
+HttpSendRequest				HttpQueryInfo				InternetCloseHandle
+InternetConnect				InternetGetConnectedState	InternetOpen
+InternetOpenUrl				InternetReadFile			URLDownloadToFile<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">其他
+OpenProcessToken			LookupPrivilegeVaule		AdjustTokenPrivileges
+OpenSCManager				CreateService				OpenService
+ControlService				DeleteService				RegisterServiceCtrlHandler
+SetServiceStatus			QueryServiceStatusEx		CreateMutex
+OpenMutex					FindWindow					LoadLibrary
+GetProAddress				GetModuleFileNameA			GetCommandLine
+OutputDebugString			………………………………………………<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="破解之法-11"><a href="#破解之法-11" class="headerlink" title="破解之法"></a>破解之法</h5><p>向系统API设置断点时尽量避开第一个字节，将之设置在代码的中间部分。此外，设置硬件断点也能避开上述所说的反调试技术。</p>
+<h4 id="比较校验和"><a href="#比较校验和" class="headerlink" title="比较校验和"></a>比较校验和</h4><p>检测代码中设置的软件断点的另一个方法是，比较特定代码区域的校验和值。比如，假定程序中0x401000~0x401070地址区域的校验和值为0x12345678，在代码调试时，必然会设置一些断点（0xCC），这样一来，新的校验和值就与原值不一样了。像这样的话，比较校验和即可判断是否处于调试状态</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/master/QQ%E6%88%AA%E5%9B%BE20220328174850.png"></p>
+<p>未设置任何断点时，计算出来的校验值保存在内存单元0x40BDC0中，在程序运行利用循环重新计算一遍校验值，然后再和原来对比。这里计算完后，直接修改je跳转即可跳转</p>
+<h5 id="破解之法-12"><a href="#破解之法-12" class="headerlink" title="破解之法"></a>破解之法</h5><p>从理论上讲，只要不在计算CRC的代码区域中设置断点或修改其中代码，基于校验和的反调试技术就会失效。但是最好的破解办法是直接修改CRC比较语句</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 767778848@qq.com </span>
+    </div>
+</article>
+
+
+
+
+
+    <div id="comments"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+<script type="text/javascript">
+    $.getScript('/js/gitalk.js', function () {
+        var gitalk = new Gitalk({
+            clientID: '6c49373fe3729f3c2b02',
+            clientSecret: '4b38338216282f43430b6118f27ae24e4732ecec',
+            repo: 'Whitebird0.github.io',
+            owner: 'Whitebird0',
+            admin: ['Whitebird0'],
+            id: decodeURI(location.pathname),
+            distractionFreeMode: 'true',
+            language: 'zh-CN',
+            perPage: parseInt('10',10)
+        })
+        gitalk.render('comments')
+    })
+</script>
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2020-2022 Whitebird
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

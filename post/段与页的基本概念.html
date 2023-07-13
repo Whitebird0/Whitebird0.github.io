@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Windows内核基础知识-段选择子与段描述符 | Whitebird&#39;s Home</title>
+  <meta name="keywords" content=" Windows内核 ">
+  <meta name="description" content="Windows内核基础知识-段选择子与段描述符 | Whitebird&#39;s Home">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="about">
+<meta property="og:url" content="https://whitebird0.github.io/about/index.html">
+<meta property="og:site_name" content="Whitebird&#39;s Home">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-09T11:26:44.000Z">
+<meta property="article:modified_time" content="2022-07-09T11:26:44.827Z">
+<meta property="article:author" content="Whitebird">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.1.0" rel="stylesheet">
+
+<link href="/css/hl_theme/github.css?v=1.1.0" rel="stylesheet">
+
+<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="/js/titleTip.js?v=1.1.0" ></script>
+
+<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.1.0" ></script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="">
+  <input class="theme_blog_path" value="">
+  <input id="theme_shortcut" value="true" />
+  <input id="theme_highlight_on" value="true" />
+  <input id="theme_code_copy" value="true" />
+</div>
+
+
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/"
+   class="avatar_target">
+    <img class="avatar"
+         src="/img/avatar.jpg"/>
+</a>
+<div class="author">
+    <span>Whitebird</span>
+</div>
+
+<div class="icon">
+    
+        
+            <a title="github"
+               href="https://github.com/Whitebird0"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-github"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="csdn"
+               href="https://blog.csdn.net/jxnu_666?type=blog"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-csdn"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="email"
+               href="mailto:767778848@qq.com"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-email"></use>
+                    </svg>
+                
+            </a>
+        
+    
+        
+            <a title="qq"
+               href="http://wpa.qq.com/msgrd?v=3&uin=767778848&site=qq&menu=yes"
+               target="_blank">
+                
+                    <svg class="iconfont-svg" aria-hidden="true">
+                        <use xlink:href="#icon-qq"></use>
+                    </svg>
+                
+            </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li>
+        <div class="all active" data-rel="全部文章">全部文章
+            
+                <small>(26)</small>
+            
+        </div>
+    </li>
+    
+        
+            
+                <li>
+                    <div data-rel="CTF">
+                        
+                        CTF
+                        <small>(6)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Reverse">
+                        
+                        Reverse
+                        <small>(8)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Android开发">
+                        
+                        Android开发
+                        <small>(10)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Android逆向">
+                        
+                        Android逆向
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+        
+            
+                <li>
+                    <div data-rel="Windows内核">
+                        
+                        Windows内核
+                        <small>(1)</small>
+                        
+                    </div>
+                    
+                </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+        
+            
+            
+    </div>
+    <div>
+        
+            <a class="about  hasFriend  site_url"
+               
+               href="/about">关于</a>
+        
+        <a style="width: 50%"
+                
+                                           class="friends">友链</a>
+        
+    </div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="26">
+<input type="hidden" id="yelog_site_word_count" value="139.2k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="iconfont icon-left"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="https://www.codetea.top/">Codetea</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
+            <div class="right-title">全部文章</div>
+            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="返回"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
+            <i class="iconfont icon-tag" data-title="标签"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">大纲</div>
+            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
+        </div>
+    </div>
+
+    <div class="tags-list">
+    <input id="tag-search" />
+    <div class="tag-wrapper">
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Android</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>CTF</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Reverse</a>
+            </li>
+        
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Windows内核</a>
+            </li>
+        
+    </div>
+
+</div>
+
+    
+    <div id="local-search-result">
+
+    </div>
+    
+    <nav id="title-list-nav">
+        
+        
+        <a  class="全部文章 Android逆向 "
+           href="/post/Frida%E7%9A%84Python%E5%BA%93%E4%BD%BF%E7%94%A8.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android逆向学习笔记——使用Python库调用Frida">Android逆向学习笔记——使用Python库调用Frida</span>
+            <span class="post-date" title="2023-06-01 09:00:15">2023/06/01</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/NDK%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记——NDK开发">Android开发学习笔记——NDK开发</span>
+            <span class="post-date" title="2023-03-31 09:00:14">2023/03/31</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code1.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(1)——初识安卓">Android开发学习笔记(1)——初识安卓</span>
+            <span class="post-date" title="2023-03-30 09:00:21">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code2.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(2)——探究活动">Android开发学习笔记(2)——探究活动</span>
+            <span class="post-date" title="2023-03-30 09:00:20">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code3.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(3)——UI开发">Android开发学习笔记(3)——UI开发</span>
+            <span class="post-date" title="2023-03-30 09:00:19">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code4.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(4)——探究碎片">Android开发学习笔记(4)——探究碎片</span>
+            <span class="post-date" title="2023-03-30 09:00:18">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code5.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(5)——详解广播机制">Android开发学习笔记(5)——详解广播机制</span>
+            <span class="post-date" title="2023-03-30 09:00:17">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code6.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(6)——数据存储全方案">Android开发学习笔记(6)——数据存储全方案</span>
+            <span class="post-date" title="2023-03-30 09:00:16">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code7.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(7)——跨程序共享数据">Android开发学习笔记(7)——跨程序共享数据</span>
+            <span class="post-date" title="2023-03-30 09:00:15">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code8.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(8)——运用手机多媒体">Android开发学习笔记(8)——运用手机多媒体</span>
+            <span class="post-date" title="2023-03-30 09:00:14">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 Android开发 "
+           href="/post/the_first_code9.html"
+           data-tag="Android"
+           data-author="" >
+            <span class="post-title" title="Android开发学习笔记(9)——网络技术">Android开发学习笔记(9)——网络技术</span>
+            <span class="post-date" title="2023-03-30 09:00:13">2023/03/30</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022%E5%B9%B4%E6%B1%9F%E8%A5%BF%E7%9C%81%E2%80%9C%E8%B5%A3%E8%82%B2%E6%9D%AF%E2%80%9D%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9B.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022年江西省“赣育杯”网络安全大赛初赛 Re WriteUp">2022年江西省“赣育杯”网络安全大赛初赛 Re WriteUp</span>
+            <span class="post-date" title="2022-10-08 22:40:21">2022/10/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/qwb.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第六届强网杯全国网络安全挑战赛 Re WriteUp">第六届强网杯全国网络安全挑战赛 Re WriteUp</span>
+            <span class="post-date" title="2022-08-08 15:49:21">2022/08/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/bluecup.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第六届蓝帽杯初赛CTF题目 Re WriteUp">第六届蓝帽杯初赛CTF题目 Re WriteUp</span>
+            <span class="post-date" title="2022-07-13 22:49:21">2022/07/13</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/CISCN2022.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="第十五届全国大学生信息安全竞赛创新实践能力赛CISCN">第十五届全国大学生信息安全竞赛创新实践能力赛CISCN</span>
+            <span class="post-date" title="2022-06-03 20:49:21">2022/06/03</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022DASCTF%20Apr%20X%20FATE%20%E9%98%B2%E7%96%AB%E6%8C%91%E6%88%98%E8%B5%9B.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022DASCTF Apr X FATE 防疫挑战赛">2022DASCTF Apr X FATE 防疫挑战赛</span>
+            <span class="post-date" title="2022-06-01 20:49:21">2022/06/01</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/PE%E6%98%A0%E5%83%8F%E5%88%87%E6%8D%A2.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——PE映像切换">逆向工程核心原理——PE映像切换</span>
+            <span class="post-date" title="2022-04-02 10:49:21">2022/04/02</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E6%9C%AF.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——反调试技术">逆向工程核心原理——反调试技术</span>
+            <span class="post-date" title="2022-03-28 10:30:21">2022/03/28</span>
+        </a>
+        
+        
+        <a  class="全部文章 CTF "
+           href="/post/2022-3-26-2022DASCTF-X-SU-Re-WriteUp.html"
+           data-tag="CTF"
+           data-author="" >
+            <span class="post-title" title="2022DASCTF X SU Re WriteUp">2022DASCTF X SU Re WriteUp</span>
+            <span class="post-date" title="2022-03-26 20:49:21">2022/03/26</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/SEH.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——SEH原理分析">逆向工程核心原理——SEH原理分析</span>
+            <span class="post-date" title="2022-03-19 10:49:21">2022/03/19</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/TLS%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——TLS回调函数">逆向工程核心原理——TLS回调函数</span>
+            <span class="post-date" title="2022-03-15 22:49:21">2022/03/15</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E5%85%A8%E5%B1%80API%E9%92%A9%E5%8F%96-IE%E9%93%BE%E6%8E%A5%E6%8E%A7%E5%88%B6.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——全局API钩取">逆向工程核心原理——全局API钩取</span>
+            <span class="post-date" title="2022-03-11 16:49:21">2022/03/11</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E8%AE%A1%E7%AE%97%E5%99%A8%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87%E6%95%B0%E5%AD%97.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——IAT_HOOK">逆向工程核心原理——IAT_HOOK</span>
+            <span class="post-date" title="2022-03-08 22:49:21">2022/03/08</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/%E9%80%9A%E8%BF%87%E4%BF%AE%E6%94%B9PE%E5%8A%A0%E8%BD%BDDLL.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——通过修改PE加载DLL">逆向工程核心原理——通过修改PE加载DLL</span>
+            <span class="post-date" title="2022-02-28 22:49:21">2022/02/28</span>
+        </a>
+        
+        
+        <a  class="全部文章 Reverse "
+           href="/post/DLL%E6%B3%A8%E5%85%A5.html"
+           data-tag="Reverse"
+           data-author="" >
+            <span class="post-title" title="逆向工程核心原理——DLL注入">逆向工程核心原理——DLL注入</span>
+            <span class="post-date" title="2022-02-26 00:49:21">2022/02/26</span>
+        </a>
+        
+        
+        <a  class="全部文章 Windows内核 "
+           href="/post/%E6%AE%B5%E4%B8%8E%E9%A1%B5%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5.html"
+           data-tag="Windows内核"
+           data-author="" >
+            <span class="post-title" title="Windows内核基础知识-段选择子与段描述符">Windows内核基础知识-段选择子与段描述符</span>
+            <span class="post-date" title="2021-10-03 12:40:21">2021/10/03</span>
+        </a>
+        
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle" data-title="切换全屏 快捷键 s">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div id="post">
+    <div class="pjax">
+        <article id="post-段与页的基本概念" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">Windows内核基础知识-段选择子与段描述符</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="Windows内核">Windows内核</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color5">Windows内核</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+            发布时间 : <time class="date" title='最后更新: 2022-12-25 23:18:06'>2021-10-03 12:40</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:1.6k</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读 :<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+        <span class="top-comment" title="跳转至评论区">
+            <a href="#comments">
+                评论:<span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </a>
+        </span>
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CPU%E7%9A%843%E4%B8%AA%E6%A8%A1%E5%BC%8F%EF%BC%9A"><span class="toc-text">CPU的3个模式：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%AE%9E%E6%A8%A1%E5%BC%8F%EF%BC%9A"><span class="toc-text">1、实模式：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F%EF%BC%9A"><span class="toc-text">2、保护模式：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E8%99%9A%E6%8B%9F8086%E6%A8%A1%E5%BC%8F%EF%BC%9A"><span class="toc-text">3、虚拟8086模式：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F"><span class="toc-text">保护模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-text">作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">段寄存器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AE%B5"><span class="toc-text">段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AE%B5%E6%98%AF%E5%85%B7%E6%9C%89%E5%B1%9E%E6%80%A7%E7%9A%84"><span class="toc-text">段是具有属性的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A2%E7%A9%B6%E6%AE%B5%E7%9A%84%E5%9F%BA%E5%9D%80base%E5%92%8C%E9%95%BF%E5%BA%A6limit"><span class="toc-text">探究段的基址base和长度limit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F"><span class="toc-text">保护模式寻址方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AE%B5%E9%80%89%E6%8B%A9%E5%AD%90"><span class="toc-text">段选择子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B"><span class="toc-text">举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%9F%A5GDT%E8%A1%A8"><span class="toc-text">如何查GDT表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AE%B5%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="toc-text">段描述符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Type%E4%BD%8D"><span class="toc-text">Type位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G%E4%BD%8D"><span class="toc-text">G位</span></a></li></ol></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="CPU的3个模式："><a href="#CPU的3个模式：" class="headerlink" title="CPU的3个模式："></a>CPU的3个模式：</h1><h2 id="1、实模式："><a href="#1、实模式：" class="headerlink" title="1、实模式："></a>1、实模式：</h2><p>DOS系统下的CPU用的就是实模式，里面用的地址就是真实的物理地址。现在的系统已经没有使用实模式的了，只是在启动的瞬间是实模式，然后进入保护模式。</p>
+<h2 id="2、保护模式："><a href="#2、保护模式：" class="headerlink" title="2、保护模式："></a>2、保护模式：</h2><p>保护模式中的地址是假的，如果要从保护模式到实模式的地址，无论是低2G还是高2G都要经过转换。除了CR3寄存器存储的是物理地址，其他的寄存器全是线性地址。</p>
+<h2 id="3、虚拟8086模式："><a href="#3、虚拟8086模式：" class="headerlink" title="3、虚拟8086模式："></a>3、虚拟8086模式：</h2><p>如果在保护模式下，想运行实模式的代码，也是可以运行的，就是虚拟8086模式。虚拟8086模式仍然是保护模式，而不是实模式。</p>
+<h1 id="保护模式"><a href="#保护模式" class="headerlink" title="保护模式"></a>保护模式</h1><h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><p>我们学习保护模式，肯定要知道保护模式有啥用，它保护的是资源，也就是寄存器，它与段和页都有很大的联系，我们接下来的学习任务都是学习段和页。</p>
+<h2 id="段寄存器"><a href="#段寄存器" class="headerlink" title="段寄存器"></a>段寄存器</h2><p>ES 堆栈段 CS 代码段 SS 堆栈段 DS 堆栈段</p>
+<p>FS 标志段寄存器 GS 全局段寄存器 LDTR TR</p>
+<h2 id="段"><a href="#段" class="headerlink" title="段"></a>段</h2><h3 id="段是具有属性的"><a href="#段是具有属性的" class="headerlink" title="段是具有属性的"></a>段是具有属性的</h3><p>CS 代码段，可读可执行，不可以写</p>
+<p>DS 数据段，可读也可写，不可执行</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20211004220220.png"></p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;Windows.h></span></span>
+<span class="token keyword">int</span> val <span class="token operator">=</span> <span class="token number">0x10</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	_asm<span class="token punctuation">&#123;</span>
+		mov ax<span class="token punctuation">,</span> cs<span class="token punctuation">;</span>
+		mov ds<span class="token punctuation">,</span> ax<span class="token punctuation">;</span>
+		mov ebx<span class="token punctuation">,</span> <span class="token number">0x11</span><span class="token punctuation">;</span>
+		mov dword ptr<span class="token punctuation">[</span>val<span class="token punctuation">]</span><span class="token punctuation">,</span> ebx<span class="token punctuation">;</span>
+
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>由于ds数据段是存放数据的，但是我们现在给ds寄存器赋值了cs寄存器的属性，那么就会导致ds现在不可以写入，也就是会赋值失败，下图就是报了访问异常的错误</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20211004220514.png"></p>
+<h3 id="探究段的基址base和长度limit"><a href="#探究段的基址base和长度limit" class="headerlink" title="探究段的基址base和长度limit"></a>探究段的基址base和长度limit</h3><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;Windows.h></span></span>
+<span class="token keyword">int</span> val <span class="token operator">=</span> <span class="token number">0x10</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	_asm<span class="token punctuation">&#123;</span>
+		mov eax<span class="token punctuation">,</span> <span class="token number">0x1</span><span class="token punctuation">;</span>
+		mov dword ptr ds<span class="token operator">:</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> eax<span class="token punctuation">;</span>
+
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20221225221730.png"></p>
+<p>当我们尝试写入ds:[0]会触发异常，但是我们改成下面的代码</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;Windows.h></span></span>
+<span class="token keyword">int</span> val <span class="token operator">=</span> <span class="token number">0x10</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	_asm<span class="token punctuation">&#123;</span>
+		mov eax<span class="token punctuation">,</span> <span class="token number">0x1</span><span class="token punctuation">;</span>
+		mov dword ptr fs<span class="token operator">:</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> eax<span class="token punctuation">;</span>
+
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这串代码和前面的区别在于由ds改为了fs，说明我们写入fs的0位置是没有问题的，这个就是与段的基址base有关</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20211014224631.png"></p>
+<p>我们可以发现除了fs，其他的段base都是从0开始的，而fs之所以可以正常访问，是因为fs指向TEB表，我们写入数据，相当于改了TEB表的便宜为0的地址上的数据。另外如果我们想得到fs的base，不能直接 lea eax,dword ptr fs:[0] ，这个会使eax&#x3D;0，因为lea实际上取的是[]之间的东西</p>
+<p>通过Windbg可以查看一下TEB结构体</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20211014230258.png"></p>
+<p>在偏移0x18的地方存放着指向自己的首地址，直接mov eax,dword ptr fs:[0x18]</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;Windows.h></span></span>
+<span class="token keyword">int</span> val <span class="token operator">=</span> <span class="token number">0x10</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	_asm<span class="token punctuation">&#123;</span>
+		xor eax<span class="token punctuation">,</span> eax<span class="token punctuation">;</span>
+		mov eax<span class="token punctuation">,</span> dword ptr fs <span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">0x18</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+		mov val<span class="token punctuation">,</span> eax<span class="token punctuation">;</span>
+
+	<span class="token punctuation">&#125;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%X"</span><span class="token punctuation">,</span> val<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">system</span><span class="token punctuation">(</span><span class="token string">"pause"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20221225222207.png"></p>
+<h3 id="保护模式寻址方式"><a href="#保护模式寻址方式" class="headerlink" title="保护模式寻址方式"></a><strong>保护模式寻址方式</strong></h3><p>段.base+offset（逻辑地址）&#x3D;线性地址,取值最大长度limit</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20211014232121.png"></p>
+<h2 id="段选择子"><a href="#段选择子" class="headerlink" title="段选择子"></a>段选择子</h2><p>保护模式下的段寄存器其实由16位的段选择子和64位的段描述符寄存器构成，我们OD看到的是段选择子</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/1073465203.png"></p>
+<p><strong>段选择子</strong>：存储段描述符的索引，也就是我们前面在OD里面看到的类似0x1B,0x23这些</p>
+<p><strong>段描述符寄存器</strong>： 存储段描述符，里面包含一些段的属性，段的base，段的limit等</p>
+<p>在16位汇编中，段寄存器中放段基址，IP中放偏移。CS:IP</p>
+<p>在32位汇编中，段寄存器中放段选择子，我们需要根据下图对段选择子进行拆分</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/3348667541.png"></p>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>CS:1B 二进制为: 0001 1011 ，按图片拆分得到：00011 0 11 </p>
+<p>Index:3</p>
+<p>Ti:0 &#x2F;&#x2F;在windows中LDT表没有用，所以Ti一直为0</p>
+<p>RPL:3 也就是说明我们现在是在R3层</p>
+<h3 id="如何查GDT表"><a href="#如何查GDT表" class="headerlink" title="如何查GDT表"></a><strong>如何查GDT表</strong></h3><p>GDT表的地址存放在gdtr寄存器中，GDT表的大小存放在gdtl中</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20221225225523.png"></p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/QQ%E6%88%AA%E5%9B%BE20221225225548.png"></p>
+<p>我们用 dq 80b95000 （dq表示四字，即64位 ）</p>
+<p>从0开始，索引为3，所以我们找到：</p>
+<p>CS段描述符为：00cffb00&#96;0000ffff</p>
+<h2 id="段描述符"><a href="#段描述符" class="headerlink" title="段描述符"></a>段描述符</h2><p>我们已经通过索引找到了段描述符，现在我们开始分析和拆解段描述符</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/3994720798.png"></p>
+<p>分为高32位和低32位，根据上表拆解CS的段描述符：</p>
+<p>我们把CS的段描述符转换成二进制</p>
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">0000 0000 1100 1111 1111 1011 0000 0000 //高32位
+0000 0000 0000 0000 1111 1111 1111 1111 //低32位
+
+Base：0000 0000 0000 0000 0000 0000 0000 0000（十六进制00000000）
+Limit：1111 1111 1111 1111 1111(十六进制fffff）
+TYPE:1011（十六进制B）
+S:1
+DPL:11
+P:1
+AVL:0
+D/B:1
+G:1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>同理也可以拆解其他的段描述符，这里可以用C语言去实现</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">_CRT_SECURE_NO_WARNINGS</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;stdio.h></span></span>
+
+<span class="token keyword">struct</span> <span class="token class-name">low_word</span> <span class="token punctuation">&#123;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> limit_0_15 <span class="token operator">:</span> <span class="token number">16</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> base_0_15 <span class="token operator">:</span> <span class="token number">16</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token keyword">struct</span> <span class="token class-name">high_word</span> <span class="token punctuation">&#123;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> base_16_23 <span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> type <span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> s <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> DPL <span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> p <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> limit_16_19 <span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> avl <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> l <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> d_b <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> g <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> base_24_31 <span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">void</span> <span class="token function">seg_des</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">high_word</span><span class="token operator">*</span> ph<span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">low_word</span><span class="token operator">*</span> pl<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> seg_base<span class="token punctuation">;</span>
+	seg_base <span class="token operator">=</span> <span class="token punctuation">(</span>ph<span class="token operator">-></span>base_24_31 <span class="token operator">&lt;&lt;</span> <span class="token number">24</span><span class="token punctuation">)</span> <span class="token operator">|</span> <span class="token punctuation">(</span>ph<span class="token operator">-></span>base_16_23 <span class="token operator">&lt;&lt;</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token operator">|</span> <span class="token punctuation">(</span>pl<span class="token operator">-></span>base_0_15<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//段基址 </span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"seg_base=0x%08x\n"</span><span class="token punctuation">,</span> seg_base<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> seg_limit<span class="token punctuation">;</span>
+	seg_limit <span class="token operator">=</span> <span class="token punctuation">(</span>ph<span class="token operator">-></span>limit_16_19 <span class="token operator">&lt;&lt;</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token operator">|</span> <span class="token punctuation">(</span>pl<span class="token operator">-></span>limit_0_15<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"seg_limit=0x%x\n"</span><span class="token punctuation">,</span> seg_limit<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Type=0x%x\n"</span><span class="token punctuation">,</span> ph<span class="token operator">-></span>type<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"S=%x\n"</span><span class="token punctuation">,</span> ph<span class="token operator">-></span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"DPL=%x\n"</span><span class="token punctuation">,</span> ph<span class="token operator">-></span>DPL<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"P=%x\n"</span><span class="token punctuation">,</span> ph<span class="token operator">-></span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"AVL=%x\n"</span><span class="token punctuation">,</span> ph<span class="token operator">-></span>avl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"DEF=%x\n"</span><span class="token punctuation">,</span> ph<span class="token operator">-></span>l<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"D/B=%x\n"</span><span class="token punctuation">,</span> ph<span class="token operator">-></span>d_b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"G=%x\n"</span><span class="token punctuation">,</span> ph<span class="token operator">-></span>g<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"please input the segment descriptor\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">struct</span> <span class="token class-name">high_word</span><span class="token operator">*</span> high<span class="token punctuation">;</span>
+	<span class="token keyword">struct</span> <span class="token class-name">low_word</span><span class="token operator">*</span> low<span class="token punctuation">;</span>
+	
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> l_word <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> h_word <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+	<span class="token comment">//请求用户输入描述符，先是低32位，再是高32位</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"low:\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">scanf</span><span class="token punctuation">(</span><span class="token string">"%x"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>l_word<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"high:\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">scanf</span><span class="token punctuation">(</span><span class="token string">"%x"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>h_word<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"-----------------------\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	high <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">high_word</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>h_word<span class="token punctuation">;</span>
+	low <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">low_word</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>l_word<span class="token punctuation">;</span>
+	<span class="token function">seg_des</span><span class="token punctuation">(</span>high<span class="token punctuation">,</span> low<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"------------------------\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="Type位"><a href="#Type位" class="headerlink" title="Type位"></a>Type位</h3><p>有四位，通过值在表中进行索引</p>
+<p><img src="https://raw.githubusercontent.com/Whitebird0/tuchuang/main/20201128125007604.png"></p>
+<h3 id="G位"><a href="#G位" class="headerlink" title="G位"></a><strong>G位</strong></h3><p>颗粒度</p>
+<p>G &#x3D; 1 Limit单位为页</p>
+<p>G &#x3D; 0 Limit单位为字节</p>
+<p>页分为两种</p>
+<p>大页：4MB</p>
+<p>小页：4KB&#x3D;4096B&#x3D;0x1000Byte（我们使用）</p>
+<p>所以Limit&#x3D;Limit*0x1000，既ffffff*0x1000&#x3D;ffffff000</p>
+<p>因为我们从第0页开始，所以ffffff000+0x1000</p>
+<p>又因为地址从0开始，所以还得ffffff000+0x1000-1&#x3D;ffffffff</p>
+<p>所以最后base为00000000，limit为ffffffff</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 767778848@qq.com </span>
+    </div>
+</article>
+
+
+
+
+
+    <div id="comments"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+<script type="text/javascript">
+    $.getScript('/js/gitalk.js', function () {
+        var gitalk = new Gitalk({
+            clientID: '6c49373fe3729f3c2b02',
+            clientSecret: '4b38338216282f43430b6118f27ae24e4732ecec',
+            repo: 'Whitebird0.github.io',
+            owner: 'Whitebird0',
+            admin: ['Whitebird0'],
+            id: decodeURI(location.pathname),
+            distractionFreeMode: 'true',
+            language: 'zh-CN',
+            perPage: parseInt('10',10)
+        })
+        gitalk.render('comments')
+    })
+</script>
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">
+    ©2020-2022 Whitebird
+</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
+
+<script src="/js/script.js?v=1.1.0" ></script>
+<script>
+    var img_resize = 'default';
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $("#post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
